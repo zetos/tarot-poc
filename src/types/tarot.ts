@@ -28,9 +28,27 @@ export type Spread = {
   positions: SpreadPosition[];
 };
 
+export type CardOrientation = "upright" | "reversed";
+
+export type DrawnCard = TarotCard & {
+  orientation: CardOrientation;
+  position: number;
+};
+
 export type Reading = {
   question: ReadingQuestion;
   spread: Spread;
   cards: TarotCard[];
   createdAt: Date;
+};
+
+export type ReadingRequest = {
+  questionId: string;
+  spreadId: string;
+};
+
+export type ReadingResponse = {
+  questionId: string;
+  spreadId: string;
+  cards: DrawnCard[];
 };

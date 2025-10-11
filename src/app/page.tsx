@@ -4,17 +4,48 @@ import Select from "@/components/Select";
 import { readingQuestions } from "@/data/questions";
 import { spreads } from "@/data/spreads";
 import { useState } from "react";
+import type { ReadingResponse } from "@/types/tarot";
 
 export default function Home() {
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [selectedSpread, setSelectedSpread] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleBeginReading = () => {
+  const handleBeginReading = async () => {
     if (!selectedQuestion || !selectedSpread) {
       alert("Please select both a question and a spread to begin your reading.");
       return;
     }
-    alert(`Starting reading with: ${selectedQuestion} using ${selectedSpread} spread`);
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/reading", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: selectedQuestion,
+          spreadId: selectedSpread,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("API Error:", error);
+        alert(`Error: ${error.error || "Failed to create reading"}`);
+        return;
+      }
+
+      const data: ReadingResponse = await response.json();
+      console.log("Reading Result:", data);
+    } catch (error) {
+      console.error("Failed to create reading:", error);
+      alert("An error occurred while creating your reading. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const questionOptions = readingQuestions.map((q) => ({
@@ -72,10 +103,10 @@ export default function Home() {
 
             <button
               onClick={handleBeginReading}
-              disabled={!canBeginReading}
+              disabled={!canBeginReading || isLoading}
               className="w-full mt-8 py-4 px-6 rounded-lg font-medium text-base sm:text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-foreground text-background hover:bg-foreground/90 disabled:hover:bg-foreground"
             >
-              Begin Reading
+              {isLoading ? "Loading..." : "Begin Reading"}
             </button>
           </div>
         </div>
