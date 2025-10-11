@@ -1,103 +1,89 @@
-import Image from "next/image";
+"use client";
+
+import Select from "@/components/Select";
+import { readingQuestions } from "@/data/questions";
+import { spreads } from "@/data/spreads";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [selectedQuestion, setSelectedQuestion] = useState("");
+  const [selectedSpread, setSelectedSpread] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleBeginReading = () => {
+    if (!selectedQuestion || !selectedSpread) {
+      alert("Please select both a question and a spread to begin your reading.");
+      return;
+    }
+    alert(`Starting reading with: ${selectedQuestion} using ${selectedSpread} spread`);
+  };
+
+  const questionOptions = readingQuestions.map((q) => ({
+    value: q.id,
+    label: q.label,
+  }));
+
+  const spreadOptions = spreads.map((s) => ({
+    value: s.id,
+    label: s.name,
+  }));
+
+  const canBeginReading = selectedQuestion && selectedSpread;
+
+  return (
+    <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-background text-foreground">
+      <main className="max-w-2xl w-full">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
+            Mage: The Ascension
+          </h1>
+          <h2 className="text-2xl sm:text-3xl font-light mb-6 text-foreground/80">
+            Tarot Reading
+          </h2>
+          <p className="text-base sm:text-lg text-foreground/60 max-w-xl mx-auto">
+            Choose your question and spread to begin your journey through the cards
+          </p>
         </div>
+
+        <div className="bg-foreground/[0.03] dark:bg-white/[0.05] rounded-2xl p-8 sm:p-10 border border-black/[.08] dark:border-white/[.145] shadow-lg">
+          <div className="space-y-6">
+            <Select
+              label="What guidance do you seek?"
+              options={questionOptions}
+              value={selectedQuestion}
+              onChange={setSelectedQuestion}
+              placeholder="Select a question"
+            />
+
+            <Select
+              label="Choose your reading spread"
+              options={spreadOptions}
+              value={selectedSpread}
+              onChange={setSelectedSpread}
+              placeholder="Select a spread"
+            />
+
+            {selectedSpread && (
+              <div className="mt-4 p-4 rounded-lg bg-background/50 border border-black/[.05] dark:border-white/[.1]">
+                <p className="text-sm text-foreground/70">
+                  {spreads.find((s) => s.id === selectedSpread)?.description}
+                </p>
+              </div>
+            )}
+
+            <button
+              onClick={handleBeginReading}
+              disabled={!canBeginReading}
+              className="w-full mt-8 py-4 px-6 rounded-lg font-medium text-base sm:text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-foreground text-background hover:bg-foreground/90 disabled:hover:bg-foreground"
+            >
+              Begin Reading
+            </button>
+          </div>
+        </div>
+
+        <footer className="mt-12 text-center text-sm text-foreground/50">
+          <p>A journey through the Mage: The Ascension tarot deck</p>
+        </footer>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
