@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🜏 Mage: The Ascension Tarot – Next.js Reading App
 
-## Getting Started
+A modern **Next.js** web app for performing **Tarot readings** using the **Mage: The Ascension** deck.  
+This project blends **esoteric symbolism** and **interactive storytelling** with a clean and dynamic interface, allowing users to explore mystical readings, archetypes, and Mage lore through digital Tarot spreads.
 
-First, run the development server:
+---
+
+## ✨ Features
+
+- 🃏 **Mage: The Ascension Tarot Deck**  
+  Full digital representation of the official Mage deck, with major and minor arcana descriptions.
+
+- 🔮 **Interactive Readings**  
+  Choose from multiple spread types (e.g. One-Card, Three-Card, Celtic Cross, Sphere of Influence).
+
+- ⚙️ **Randomized Draws with Weighted Archetypes**  
+  Custom logic to simulate “magical resonance” — allowing unique draws and narrative combinations.
+
+- 📖 **Card Meanings & Interpretations**  
+  Integrated lore, upright and reversed interpretations, and connections to Mage Spheres.
+
+- 🎨 **Elegant UI/UX**  
+  Built with **Next.js 15**, **Tailwind CSS**, and **Framer Motion** for smooth animations and atmospheric transitions.
+
+- 🧙 **Extensible Architecture**  
+  Designed for future expansions (e.g. alternate decks, AI-generated readings, user-saved spreads).
+
+---
+
+## 🧩 Tech Stack
+
+| Layer              | Technology                               |
+| ------------------ | ---------------------------------------- |
+| Frontend Framework | [Next.js](https://nextjs.org/)           |
+| Styling            | [Tailwind CSS](https://tailwindcss.com/) |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/mage-tarot.git
+cd mage-tarot
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`npm install`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Run the development server
 
-## Learn More
+`npm run dev`
 
-To learn more about Next.js, take a look at the following resources:
+Then open http://localhost:3000
+in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏗️ Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+mage-tarot/
+│
+├── public/
+│ ├── cards/ # Card images
+│ ├── icons/ # UI icons
+│ └── deck.json # Card data and archetype metadata
+│
+├── src/
+│ ├── app/ # Next.js app router
+│ ├── components/ # Reusable UI components
+│ ├── lib/ # Utility functions (e.g. random draw logic)
+│ ├── styles/ # Global styles
+│ └── data/ # Card, spreads
+│
+└── README.md
+```
 
-## Deploy on Vercel
+## 🧠 Future Plans
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+🪄 AI-assisted readings powered by OpenAI or custom LLM prompts.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🕯️ User profiles and reading history.
+
+📜 Export readings as PDF or shareable link.
+
+🌒 Optional “Story Mode” for narrative interpretations.
+
+## ⚖️ License
+
+This project is licensed under the MIT License.
+All Mage: The Ascension materials and artwork remain property of White Wolf Publishing / Paradox Interactive and are used under fan-made fair use guidelines.
