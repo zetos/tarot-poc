@@ -8,7 +8,7 @@ export type TarotCard = {
   id: number;
   name: string;
   arcana: 'major' | 'minor';
-  suid?: Suit;
+  suit?: Suit;
   imagePath: string;
   uprightMeaning: string;
   reversedMeaning: string;
