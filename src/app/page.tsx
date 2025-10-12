@@ -1,12 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Select from "@/components/Select";
 import { readingQuestions } from "@/data/questions";
 import { spreads } from "@/data/spreads";
 import { useState } from "react";
+import { saveReading } from "@/lib/reading-storage";
 import type { ReadingResponse } from "@/types/tarot";
 
 export default function Home() {
+  const router = useRouter();
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [selectedSpread, setSelectedSpread] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +43,9 @@ export default function Home() {
 
       const data: ReadingResponse = await response.json();
       console.log("Reading Result:", data);
+      
+      saveReading(data);
+      router.push("/reading");
     } catch (error) {
       console.error("Failed to create reading:", error);
       alert("An error occurred while creating your reading. Please try again.");

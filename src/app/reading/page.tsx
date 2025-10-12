@@ -1,0 +1,99 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import CelticCrossLayout from "@/components/CelticCrossLayout";
+import CardDetails from "@/components/CardDetails";
+import { getReading, clearReading } from "@/lib/reading-storage";
+import { spreads } from "@/data/spreads";
+import { readingQuestions } from "@/data/questions";
+import type { ReadingResponse, DrawnCard, SpreadPosition } from "@/types/tarot";
+
+export default function ReadingPage() {
+  const router = useRouter();
+  const [reading, setReading] = useState<ReadingResponse | null>(null);
+  const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<SpreadPosition | null>(null);
+
+  useEffect(() => {
+    const data = getReading();
+    if (!data) {
+      router.push("/");
+      return;
+    }
+    setReading(data);
+  }, [router]);
+
+  if (!reading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-foreground/60">Loading your reading...</p>
+      </div>
+    );
+  }
+
+  const spread = spreads.find((s) => s.id === reading.spreadId);
+  const question = readingQuestions.find((q) => q.id === reading.questionId);
+
+  if (!spread || !question) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-foreground/60">Invalid reading data</p>
+      </div>
+    );
+  }
+
+  const handleCardClick = (card: DrawnCard, position: SpreadPosition) => {
+    setSelectedCard(card);
+    setSelectedPosition(position);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedCard(null);
+    setSelectedPosition(null);
+  };
+
+  const handleNewReading = () => {
+    clearReading();
+    router.push("/");
+  };
+
+  return (
+    <div className="min-h-screen p-4 sm:p-8 bg-background text-foreground">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">
+            {spread.name}
+          </h1>
+          <p className="text-lg sm:text-xl text-foreground/70 mb-2">
+            {question.label}
+          </p>
+          <p className="text-sm text-foreground/50">{question.description}</p>
+        </div>
+
+        <div className="mb-8">
+          <CelticCrossLayout
+            cards={reading.cards}
+            spreadPositions={spread.positions}
+            onCardClick={handleCardClick}
+          />
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handleNewReading}
+            className="px-6 py-3 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors"
+          >
+            New Reading
+          </button>
+        </div>
+      </div>
+
+      <CardDetails
+        card={selectedCard}
+        positionInfo={selectedPosition}
+        onClose={handleCloseDetails}
+      />
+    </div>
+  );
+}
