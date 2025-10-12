@@ -20,6 +20,21 @@ export default function CardDetails({
   const isReversed = card.orientation === "reversed";
   const meaning = isReversed ? card.reversedMeaning : card.uprightMeaning;
 
+  const getElementColor = (element: string) => {
+    switch (element) {
+      case 'fire':
+        return 'border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400';
+      case 'water':
+        return 'border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400';
+      case 'air':
+        return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400';
+      case 'earth':
+        return 'border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400';
+      default:
+        return 'border-foreground/20 bg-foreground/10';
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -35,9 +50,25 @@ export default function CardDetails({
               <h2 className="text-2xl sm:text-3xl font-bold mb-2">
                 {card.name}
               </h2>
-              <p className="text-sm text-foreground/60">
+              <p className="text-sm text-foreground/60 mb-3">
                 {isReversed ? "Reversed" : "Upright"}
               </p>
+              {card.suit && (
+                <div className="flex flex-wrap gap-2">
+                  <span className={`px-2.5 py-1 rounded-md text-xs font-medium border capitalize ${getElementColor(card.suit.element)}`}>
+                    {card.suit.essence}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-foreground/20 bg-foreground/5 capitalize">
+                    {card.suit.faction}
+                  </span>
+                  <span className={`px-2.5 py-1 rounded-md text-xs font-medium border capitalize ${getElementColor(card.suit.element)}`}>
+                    {card.suit.element}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-foreground/20 bg-foreground/5 capitalize">
+                    {card.suit.tarotSuit}
+                  </span>
+                </div>
+              )}
             </div>
             <button
               onClick={onClose}
@@ -50,7 +81,7 @@ export default function CardDetails({
           <div className="space-y-6">
             <div className="flex justify-center mb-6">
               <div
-                className={`relative w-64 h-96 bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden ${
+                className={`relative w-80 h-[32rem] sm:w-96 sm:h-[36rem] bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden ${
                   isReversed ? "rotate-180" : ""
                 }`}
               >
@@ -61,7 +92,7 @@ export default function CardDetails({
                     fill
                     className="object-contain"
                     onError={() => setImageError(true)}
-                    sizes="256px"
+                    sizes="(max-width: 640px) 320px, 384px"
                     priority
                   />
                 ) : (
