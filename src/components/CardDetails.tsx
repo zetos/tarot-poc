@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { DrawnCard, SpreadPosition } from "@/types/tarot";
 
 type CardDetailsProps = {
@@ -36,14 +39,23 @@ export default function CardDetails({
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-background border border-black/[.1] dark:border-white/[.2] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
       >
+        <motion.div
+          className="bg-background border border-black/[.1] dark:border-white/[.2] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
         <div className="p-6 sm:p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
@@ -143,7 +155,8 @@ export default function CardDetails({
             Close
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+    </AnimatePresence>
   );
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import type { DrawnCard } from "@/types/tarot";
 
 type TarotCardProps = {
@@ -17,11 +18,29 @@ export default function TarotCard({
 }: TarotCardProps) {
   const isReversed = card.orientation === "reversed";
   const [imageError, setImageError] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div
-      className={`relative cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl ${className}`}
+    <motion.div
+      className={`relative cursor-pointer ${className}`}
       onClick={onClick}
+      whileHover={
+        shouldReduceMotion
+          ? {}
+          : {
+              y: -8,
+              scale: 1.03,
+              transition: { duration: 0.2, ease: "easeOut" },
+            }
+      }
+      whileTap={
+        shouldReduceMotion
+          ? {}
+          : {
+              scale: 0.98,
+              transition: { duration: 0.1 },
+            }
+      }
     >
       <div
         className={`bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden aspect-[2/3] relative ${
@@ -52,6 +71,6 @@ export default function TarotCard({
       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow-lg">
         {positionName}
       </div>
-    </div>
+    </motion.div>
   );
 }
