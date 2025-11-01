@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CelticCrossLayout from "@/components/CelticCrossLayout";
+import CircularSpread7Layout from "@/components/CircularSpread7Layout";
+import CircularSpread12Layout from "@/components/CircularSpread12Layout";
 import CardDetails from "@/components/CardDetails";
 import { getReading, clearReading } from "@/lib/reading-storage";
 import { spreads } from "@/data/spreads";
@@ -72,11 +74,27 @@ export default function ReadingPage() {
         </div>
 
         <div className="mb-8">
-          <CelticCrossLayout
-            cards={reading.cards}
-            spreadPositions={spread.positions}
-            onCardClick={handleCardClick}
-          />
+          {spread.id === "celtic-cross" && (
+            <CelticCrossLayout
+              cards={reading.cards}
+              spreadPositions={spread.positions}
+              onCardClick={handleCardClick}
+            />
+          )}
+          {spread.id === "circular-7-weekly" && (
+            <CircularSpread7Layout
+              cards={reading.cards}
+              spreadPositions={spread.positions}
+              onCardClick={handleCardClick}
+            />
+          )}
+          {spread.id === "circular-12-yearly" && (
+            <CircularSpread12Layout
+              cards={reading.cards}
+              spreadPositions={spread.positions}
+              onCardClick={handleCardClick}
+            />
+          )}
         </div>
 
         <div className="text-center">
