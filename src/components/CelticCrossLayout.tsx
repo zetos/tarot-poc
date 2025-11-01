@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import TarotCard from "@/components/TarotCard";
 import type { DrawnCard, SpreadPosition } from "@/types/tarot";
+import { motion, useReducedMotion } from "framer-motion";
 
 type CelticCrossLayoutProps = {
   cards: DrawnCard[];
@@ -57,12 +57,12 @@ export default function CelticCrossLayout({
     <div className="w-full">
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-start justify-center">
         <motion.div
-          className="relative w-full max-w-md lg:max-w-lg"
+          className="relative w-full"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <div className="grid grid-cols-5 grid-rows-5 gap-2 sm:gap-3">
+          <div className="grid grid-cols-5 grid-rows-5 gap-2 sm:gap-3" style={{ gridTemplateColumns: 'repeat(5, minmax(0, 220px))', gridTemplateRows: 'repeat(5, auto)' }}>
             {[5].map((pos) => {
               const card = getCardByPosition(pos);
               const posInfo = getPositionInfo(pos);
@@ -110,8 +110,8 @@ export default function CelticCrossLayout({
               return (
                 <motion.div
                   key={pos}
-                  className="col-start-3 row-start-3"
-                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4" }}
+                  className="col-start-3 row-start-3 z-10"
+                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: -80 }}
                   variants={cardVariants}
                 >
                   <TarotCard
@@ -130,8 +130,8 @@ export default function CelticCrossLayout({
               return (
                 <motion.div
                   key={pos}
-                  className="col-start-3 row-start-3 z-10"
-                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4" }}
+                  className="col-start-3 row-start-3 z-20"
+                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: 80 }}
                   variants={cardVariants}
                 >
                   <TarotCard
@@ -187,7 +187,7 @@ export default function CelticCrossLayout({
         </motion.div>
 
         <motion.div
-          className="flex flex-col-reverse gap-3 sm:gap-4 w-full max-w-[200px] sm:max-w-[220px]"
+          className="flex flex-col-reverse gap-2 sm:gap-3 w-full max-w-[220px]"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
