@@ -110,7 +110,7 @@ export default function ReadingPage() {
       <CardDetails
         card={selectedCard}
         positionInfo={selectedPosition}
-        onClose={handleCloseDetails}
+        onCloseAction={handleCloseDetails}
       />
     </div>
   );

@@ -1,7 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { AnimatePresence } from "framer-motion";
 import Select from "@/components/Select";
+import ShuffleAnimation from "@/components/ShuffleAnimation";
 import { readingQuestions } from "@/data/questions";
 import { spreads } from "@/data/spreads";
 import { useState } from "react";
@@ -13,6 +15,8 @@ export default function Home() {
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [selectedSpread, setSelectedSpread] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showShuffle, setShowShuffle] = useState(false);
+  const [readingData, setReadingData] = useState<ReadingResponse | null>(null);
 
   const handleBeginReading = async () => {
     if (!selectedQuestion || !selectedSpread) {
@@ -21,6 +25,7 @@ export default function Home() {
     }
 
     setIsLoading(true);
+    setShowShuffle(true);
 
     try {
       const response = await fetch("/api/reading", {
@@ -37,20 +42,27 @@ export default function Home() {
       if (!response.ok) {
         const error = await response.json();
         console.error("API Error:", error);
+        setShowShuffle(false);
+        setIsLoading(false);
         alert(`Error: ${error.error || "Failed to create reading"}`);
         return;
       }
 
       const data: ReadingResponse = await response.json();
       console.log("Reading Result:", data);
-      
-      saveReading(data);
-      router.push("/reading");
+      setReadingData(data);
     } catch (error) {
       console.error("Failed to create reading:", error);
-      alert("An error occurred while creating your reading. Please try again.");
-    } finally {
+      setShowShuffle(false);
       setIsLoading(false);
+      alert("An error occurred while creating your reading. Please try again.");
+    }
+  };
+
+  const handleShuffleComplete = () => {
+    if (readingData) {
+      saveReading(readingData);
+      router.push("/reading");
     }
   };
 
@@ -67,8 +79,15 @@ export default function Home() {
   const canBeginReading = selectedQuestion && selectedSpread;
 
   return (
-    <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-background text-foreground">
-      <main className="max-w-2xl w-full">
+    <>
+      <AnimatePresence>
+        {showShuffle && (
+          <ShuffleAnimation onCompleteAction={handleShuffleComplete} />
+        )}
+      </AnimatePresence>
+
+      <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-background text-foreground">
+        <main className="max-w-2xl w-full">
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
             Mage: The Ascension
@@ -117,10 +136,11 @@ export default function Home() {
           </div>
         </div>
 
-        <footer className="mt-12 text-center text-sm text-foreground/50">
-          <p>A journey through the Mage: The Ascension tarot deck</p>
-        </footer>
-      </main>
-    </div>
+          <footer className="mt-12 text-center text-sm text-foreground/50">
+            <p>A journey through the Mage: The Ascension tarot deck</p>
+          </footer>
+        </main>
+      </div>
+    </>
   );
 }
