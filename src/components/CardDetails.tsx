@@ -8,13 +8,13 @@ import type { DrawnCard, SpreadPosition } from "@/types/tarot";
 type CardDetailsProps = {
   card: DrawnCard | null;
   positionInfo: SpreadPosition | null;
-  onClose: () => void;
+  onCloseAction: () => void;
 };
 
 export default function CardDetails({
   card,
   positionInfo,
-  onClose,
+  onCloseAction,
 }: CardDetailsProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -42,7 +42,7 @@ export default function CardDetails({
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onClick={onClose}
+        onClick={onCloseAction}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -83,7 +83,7 @@ export default function CardDetails({
               )}
             </div>
             <button
-              onClick={onClose}
+              onClick={onCloseAction}
               className="text-foreground/60 hover:text-foreground transition-colors text-2xl leading-none"
             >
               ×
@@ -93,7 +93,7 @@ export default function CardDetails({
           <div className="space-y-6">
             <div className="flex justify-center mb-6">
               <div
-                className={`relative w-80 h-[32rem] sm:w-96 sm:h-[36rem] bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden ${
+                className={`relative w-80 aspect-[3/5] sm:w-96 bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden ${
                   isReversed ? "rotate-180" : ""
                 }`}
               >
@@ -149,7 +149,7 @@ export default function CardDetails({
           </div>
 
           <button
-            onClick={onClose}
+            onClick={onCloseAction}
             className="w-full mt-6 py-3 px-6 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors"
           >
             Close

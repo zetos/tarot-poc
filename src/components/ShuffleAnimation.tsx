@@ -44,7 +44,7 @@ export default function ShuffleAnimation({
     >
       <div className="flex flex-col items-center gap-8">
         {/* Shuffle animation container */}
-        <div className="relative w-48 h-72 sm:w-64 sm:h-96">
+        <div className="relative w-48 aspect-[3/5] sm:w-64">
           {Array.from({ length: cardCount }).map((_, i) => {
             const offset = getRandomOffset(i);
             const delay = shouldReduceMotion ? 0 : i * 0.08;

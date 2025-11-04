@@ -43,7 +43,7 @@ export default function TarotCard({
       }
     >
       <div
-        className={`bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden aspect-[2/3] relative ${
+        className={`bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden aspect-[3/5] relative ${
           isReversed ? "rotate-180" : ""
         }`}
       >
