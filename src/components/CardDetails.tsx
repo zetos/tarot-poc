@@ -59,7 +59,7 @@ export default function CardDetails({
         <div className="p-6 sm:p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-mage-gold-700">
+              <h2 className="font-abbess text-2xl sm:text-3xl font-bold mb-2 text-mage-gold-700">
                 {card.name}
               </h2>
               <p className="text-sm text-mage-gold-600 mb-3">
@@ -120,7 +120,7 @@ export default function CardDetails({
               </div>
             </div>
             <div className="bg-mage-purple-900/40 rounded-lg p-4 border border-mage-gold-800/20">
-              <h3 className="font-semibold mb-2 text-sm text-mage-gold-600">
+              <h3 className="font-visit font-semibold mb-2 text-sm text-mage-gold-600">
                 Position {positionInfo.position}: {positionInfo.name}
               </h3>
               <p className="text-sm text-mage-gold-500">
@@ -129,12 +129,12 @@ export default function CardDetails({
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2 text-mage-gold-700">Meaning</h3>
+              <h3 className="font-visit font-semibold mb-2 text-mage-gold-700">Meaning</h3>
               <p className="text-mage-gold-500 leading-relaxed">{meaning}</p>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2 text-mage-gold-700">Keywords</h3>
+              <h3 className="font-visit font-semibold mb-2 text-mage-gold-700">Keywords</h3>
               <div className="flex flex-wrap gap-2">
                 {card.keywords.map((keyword) => (
                   <span

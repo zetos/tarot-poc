@@ -64,10 +64,10 @@ export default function ReadingPage() {
     <div className="min-h-screen p-4 sm:p-8 bg-mage-purple-950 text-mage-gold-700">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-mage-gold-700">
+          <h1 className="font-abbess text-3xl sm:text-4xl font-bold mb-3 text-mage-gold-700">
             {spread.name}
           </h1>
-          <p className="text-lg sm:text-xl text-mage-gold-600 mb-2">
+          <p className="font-visit text-lg sm:text-xl text-mage-gold-600 mb-2">
             {question.label}
           </p>
           <p className="text-sm text-mage-gold-500">{question.description}</p>

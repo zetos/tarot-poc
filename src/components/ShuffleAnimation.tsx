@@ -105,10 +105,10 @@ export default function ShuffleAnimation({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <p className="text-lg sm:text-xl font-medium text-mage-gold-700">
+          <p className="font-visit text-lg sm:text-xl font-medium text-mage-gold-700">
             Shuffling the deck...
           </p>
-          <p className="text-sm text-mage-gold-500 mt-2">
+          <p className="font-visit text-sm text-mage-gold-500 mt-2">
             Preparing your reading
           </p>
         </motion.div>

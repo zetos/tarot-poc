@@ -26,6 +26,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-abbess: var(--font-abbess);
+  --font-visit: var(--font-visit);
 }
 
 @media (prefers-color-scheme: dark) {

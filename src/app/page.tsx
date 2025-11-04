@@ -89,10 +89,10 @@ export default function Home() {
       <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-mage-purple-950 text-mage-gold-700">
         <main className="max-w-2xl w-full">
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">
+          <h1 className="font-abbess text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">
             Mage: The Ascension
           </h1>
-          <h2 className="text-2xl sm:text-3xl font-light mb-6 text-mage-gold-600">
+          <h2 className="font-visit text-2xl sm:text-3xl font-light mb-6 text-mage-gold-600">
             Tarot Reading
           </h2>
           <p className="text-base sm:text-lg text-mage-gold-500 max-w-xl mx-auto">
