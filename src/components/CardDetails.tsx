@@ -26,22 +26,22 @@ export default function CardDetails({
   const getElementColor = (element: string) => {
     switch (element) {
       case 'fire':
-        return 'border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400';
+        return 'border-red-400/40 bg-red-500/20 text-red-300';
       case 'water':
-        return 'border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400';
+        return 'border-blue-400/40 bg-blue-500/20 text-blue-300';
       case 'air':
-        return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400';
+        return 'border-cyan-400/40 bg-cyan-500/20 text-cyan-300';
       case 'earth':
-        return 'border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400';
+        return 'border-green-400/40 bg-green-500/20 text-green-300';
       default:
-        return 'border-foreground/20 bg-foreground/10';
+        return 'border-mage-gold-700/30 bg-mage-gold-900/20 text-mage-gold-500';
     }
   };
 
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-mage-purple-950/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         onClick={onCloseAction}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -49,7 +49,7 @@ export default function CardDetails({
         transition={{ duration: 0.2 }}
       >
         <motion.div
-          className="bg-background border border-black/[.1] dark:border-white/[.2] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+          className="bg-mage-purple-800 border border-mage-gold-700/30 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
           onClick={(e) => e.stopPropagation()}
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -59,10 +59,10 @@ export default function CardDetails({
         <div className="p-6 sm:p-8">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-mage-gold-700">
                 {card.name}
               </h2>
-              <p className="text-sm text-foreground/60 mb-3">
+              <p className="text-sm text-mage-gold-600 mb-3">
                 {isReversed ? "Reversed" : "Upright"}
               </p>
               {card.suit && (
@@ -70,13 +70,13 @@ export default function CardDetails({
                   <span className={`px-2.5 py-1 rounded-md text-xs font-medium border capitalize ${getElementColor(card.suit.element)}`}>
                     {card.suit.essence}
                   </span>
-                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-foreground/20 bg-foreground/5 capitalize">
+                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-mage-gold-700/30 bg-mage-purple-900/40 text-mage-gold-500 capitalize">
                     {card.suit.faction}
                   </span>
                   <span className={`px-2.5 py-1 rounded-md text-xs font-medium border capitalize ${getElementColor(card.suit.element)}`}>
                     {card.suit.element}
                   </span>
-                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-foreground/20 bg-foreground/5 capitalize">
+                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-mage-gold-700/30 bg-mage-purple-900/40 text-mage-gold-500 capitalize">
                     {card.suit.tarotSuit}
                   </span>
                 </div>
@@ -84,7 +84,7 @@ export default function CardDetails({
             </div>
             <button
               onClick={onCloseAction}
-              className="text-foreground/60 hover:text-foreground transition-colors text-2xl leading-none"
+              className="text-mage-gold-600 hover:text-mage-gold-500 transition-colors text-2xl leading-none"
             >
               ×
             </button>
@@ -93,7 +93,7 @@ export default function CardDetails({
           <div className="space-y-6">
             <div className="flex justify-center mb-6">
               <div
-                className={`relative w-80 aspect-[3/5] sm:w-96 bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden ${
+                className={`relative w-80 aspect-[3/5] sm:w-96 bg-mage-purple-900/60 rounded-lg border-2 border-mage-gold-700/40 overflow-hidden ${
                   isReversed ? "rotate-180" : ""
                 }`}
               >
@@ -109,37 +109,37 @@ export default function CardDetails({
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                    <p className="font-bold text-base mb-2 text-center">
+                    <p className="font-bold text-base mb-2 text-center text-mage-gold-600">
                       {card.name}
                     </p>
-                    <p className="text-sm text-foreground/60 text-center">
+                    <p className="text-sm text-mage-gold-500 text-center">
                       Image not available
                     </p>
                   </div>
                 )}
               </div>
             </div>
-            <div className="bg-foreground/[0.03] dark:bg-white/[0.05] rounded-lg p-4 border border-black/[.05] dark:border-white/[.1]">
-              <h3 className="font-semibold mb-2 text-sm text-foreground/80">
+            <div className="bg-mage-purple-900/40 rounded-lg p-4 border border-mage-gold-800/20">
+              <h3 className="font-semibold mb-2 text-sm text-mage-gold-600">
                 Position {positionInfo.position}: {positionInfo.name}
               </h3>
-              <p className="text-sm text-foreground/70">
+              <p className="text-sm text-mage-gold-500">
                 {positionInfo.description}
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Meaning</h3>
-              <p className="text-foreground/80 leading-relaxed">{meaning}</p>
+              <h3 className="font-semibold mb-2 text-mage-gold-700">Meaning</h3>
+              <p className="text-mage-gold-500 leading-relaxed">{meaning}</p>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Keywords</h3>
+              <h3 className="font-semibold mb-2 text-mage-gold-700">Keywords</h3>
               <div className="flex flex-wrap gap-2">
                 {card.keywords.map((keyword) => (
                   <span
                     key={keyword}
-                    className="px-3 py-1 bg-foreground/[0.08] dark:bg-white/[0.1] rounded-full text-sm"
+                    className="px-3 py-1 bg-mage-purple-900/50 border border-mage-gold-800/30 rounded-full text-sm text-mage-gold-500"
                   >
                     {keyword}
                   </span>
@@ -150,7 +150,7 @@ export default function CardDetails({
 
           <button
             onClick={onCloseAction}
-            className="w-full mt-6 py-3 px-6 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors"
+            className="w-full mt-6 py-3 px-6 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium hover:bg-mage-gold-600 transition-colors"
           >
             Close
           </button>

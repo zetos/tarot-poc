@@ -86,21 +86,21 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-background text-foreground">
+      <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-mage-purple-950 text-mage-gold-700">
         <main className="max-w-2xl w-full">
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">
             Mage: The Ascension
           </h1>
-          <h2 className="text-2xl sm:text-3xl font-light mb-6 text-foreground/80">
+          <h2 className="text-2xl sm:text-3xl font-light mb-6 text-mage-gold-600">
             Tarot Reading
           </h2>
-          <p className="text-base sm:text-lg text-foreground/60 max-w-xl mx-auto">
+          <p className="text-base sm:text-lg text-mage-gold-500 max-w-xl mx-auto">
             Choose your question and spread to begin your journey through the cards
           </p>
         </div>
 
-        <div className="bg-foreground/[0.03] dark:bg-white/[0.05] rounded-2xl p-8 sm:p-10 border border-black/[.08] dark:border-white/[.145] shadow-lg">
+        <div className="bg-mage-purple-800/60 rounded-2xl p-8 sm:p-10 border border-mage-gold-800/30 shadow-lg shadow-mage-purple-900/50">
           <div className="space-y-6">
             <Select
               label="What guidance do you seek?"
@@ -119,8 +119,8 @@ export default function Home() {
             />
 
             {selectedSpread && (
-              <div className="mt-4 p-4 rounded-lg bg-background/50 border border-black/[.05] dark:border-white/[.1]">
-                <p className="text-sm text-foreground/70">
+              <div className="mt-4 p-4 rounded-lg bg-mage-purple-900/40 border border-mage-gold-800/20">
+                <p className="text-sm text-mage-gold-500">
                   {spreads.find((s) => s.id === selectedSpread)?.description}
                 </p>
               </div>
@@ -129,14 +129,14 @@ export default function Home() {
             <button
               onClick={handleBeginReading}
               disabled={!canBeginReading || isLoading}
-              className="w-full mt-8 py-4 px-6 rounded-lg font-medium text-base sm:text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-foreground text-background hover:bg-foreground/90 disabled:hover:bg-foreground"
+              className="w-full mt-8 py-4 px-6 rounded-lg font-medium text-base sm:text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-mage-gold-700 text-mage-purple-950 hover:bg-mage-gold-600 disabled:hover:bg-mage-gold-700"
             >
               {isLoading ? "Loading..." : "Begin Reading"}
             </button>
           </div>
         </div>
 
-          <footer className="mt-12 text-center text-sm text-foreground/50">
+          <footer className="mt-12 text-center text-sm text-mage-gold-600/60">
             <p>A journey through the Mage: The Ascension tarot deck</p>
           </footer>
         </main>

@@ -36,7 +36,7 @@ export default function ShuffleAnimation({
 
   return (
     <motion.div
-      className="fixed inset-0 bg-background/98 backdrop-blur-sm z-50 flex items-center justify-center"
+      className="fixed inset-0 bg-mage-purple-950/98 backdrop-blur-sm z-50 flex items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -83,7 +83,7 @@ export default function ShuffleAnimation({
                   zIndex: cardCount - i,
                 }}
               >
-                <div className="relative w-full h-full rounded-lg overflow-hidden border-2 border-black/[.1] dark:border-white/[.2] shadow-xl">
+                <div className="relative w-full h-full rounded-lg overflow-hidden border-2 border-mage-gold-700/40 shadow-xl shadow-mage-purple-900/50">
                   <Image
                     src="/assets/mage/tarotcardback.png"
                     alt="Card back"
@@ -105,10 +105,10 @@ export default function ShuffleAnimation({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <p className="text-lg sm:text-xl font-medium text-foreground/90">
+          <p className="text-lg sm:text-xl font-medium text-mage-gold-700">
             Shuffling the deck...
           </p>
-          <p className="text-sm text-foreground/60 mt-2">
+          <p className="text-sm text-mage-gold-500 mt-2">
             Preparing your reading
           </p>
         </motion.div>

@@ -28,8 +28,8 @@ export default function ReadingPage() {
 
   if (!reading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-foreground/60">Loading your reading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-mage-purple-950">
+        <p className="text-mage-gold-600">Loading your reading...</p>
       </div>
     );
   }
@@ -39,8 +39,8 @@ export default function ReadingPage() {
 
   if (!spread || !question) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-foreground/60">Invalid reading data</p>
+      <div className="min-h-screen flex items-center justify-center bg-mage-purple-950">
+        <p className="text-mage-gold-600">Invalid reading data</p>
       </div>
     );
   }
@@ -61,16 +61,16 @@ export default function ReadingPage() {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-8 bg-background text-foreground">
+    <div className="min-h-screen p-4 sm:p-8 bg-mage-purple-950 text-mage-gold-700">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-mage-gold-700">
             {spread.name}
           </h1>
-          <p className="text-lg sm:text-xl text-foreground/70 mb-2">
+          <p className="text-lg sm:text-xl text-mage-gold-600 mb-2">
             {question.label}
           </p>
-          <p className="text-sm text-foreground/50">{question.description}</p>
+          <p className="text-sm text-mage-gold-500">{question.description}</p>
         </div>
 
         <div className="mb-8">
@@ -100,7 +100,7 @@ export default function ReadingPage() {
         <div className="text-center">
           <button
             onClick={handleNewReading}
-            className="px-6 py-3 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors"
+            className="px-6 py-3 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium hover:bg-mage-gold-600 transition-colors"
           >
             New Reading
           </button>

@@ -43,7 +43,7 @@ export default function TarotCard({
       }
     >
       <div
-        className={`bg-foreground/[0.05] dark:bg-white/[0.08] rounded-lg border-2 border-black/[.1] dark:border-white/[.2] overflow-hidden aspect-[3/5] relative ${
+        className={`bg-mage-purple-800/80 rounded-lg border-2 border-mage-gold-700/40 overflow-hidden aspect-[3/5] relative ${
           isReversed ? "rotate-180" : ""
         }`}
       >
@@ -58,17 +58,17 @@ export default function TarotCard({
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center p-4">
-            <p className="font-bold text-sm sm:text-base mb-2 text-center">
+            <p className="font-bold text-sm sm:text-base mb-2 text-center text-mage-gold-600">
               {card.name}
             </p>
-            <p className="text-xs text-foreground/60 text-center">
+            <p className="text-xs text-mage-gold-500 text-center">
               {card.keywords.slice(0, 2).join(", ")}
             </p>
           </div>
         )}
       </div>
 
-      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow-lg">
+      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-mage-gold-700 text-mage-purple-950 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow-lg">
         {positionName}
       </div>
     </motion.div>
