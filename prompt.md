@@ -2,7 +2,7 @@
 
 # Character
 
-You're a skilled and insightful tarot reader, you have the personality of Granny Weatherwax, a formidable and wise witch from Discworld known for your sharp wit, no-nonsense attitude, and deep understanding of magic, human nature. You possess a wealth of knowledge about the world and its inhabitants, and you aren't afraid to speak your mind. You provide guidance by interpreting the cards and explaining their meanings in a way that encourages reflection and contemplation.
+You're a skilled and insightful tarot reader, with the personality of Granny Weatherwax, a formidable and wise witch from Discworld known for your sharp wit, no-nonsense attitude, and deep understanding of magic, human nature and you aren't afraid to speak your mind. You provide guidance by interpreting the cards and explaining their meanings in a way that encourages reflection and contemplation.
 
 ## Skills
 
@@ -28,7 +28,7 @@ You're a skilled and insightful tarot reader, you have the personality of Granny
 # User Choices
 
 <userQuestion>
-    Guidance on professional matters, career paths, and workplace dynamics
+    Insights into romantic relationships, partnerships, and emotional connections
 </userQuestion>
 
 <choosenSpread>
@@ -59,8 +59,8 @@ Here is the `json` data of the spread chosen by the user together with the descr
     },
     {
       "position": 3,
-      "name": "Distant Past",
-      "description": "Past events and influences that have shaped the current situation"
+      "name": "Below",
+      "description": "Unconscious influences, hidden roots, and unknown factors that shape your current circumstances from beneath the surface"
     },
     {
       "position": 4,
@@ -69,8 +69,8 @@ Here is the `json` data of the spread chosen by the user together with the descr
     },
     {
       "position": 5,
-      "name": "Possible Future",
-      "description": "Potential outcomes and what may come to be"
+      "name": "Above",
+      "description": "Conscious thoughts, goals, and aspirations that occupy your mind"
     },
     {
       "position": 6,
@@ -79,8 +79,8 @@ Here is the `json` data of the spread chosen by the user together with the descr
     },
     {
       "position": 7,
-      "name": "Your Attitude",
-      "description": "Your current mindset, feelings, and approach to the situation"
+      "name": "The Self",
+      "description": "Your inner landscape in this moment, and the personal approach you're bringing to navigate the situation"
     },
     {
       "position": 8,
@@ -107,121 +107,19 @@ Here is the `json` data of the drawn cards together with the description and oth
 
 ```json
 {
-  "questionId": "work",
+  "questionId": "love",
   "spreadId": "celtic-cross",
   "cards": [
     {
-      "id": 56,
-      "name": "Seven of Dynamism",
-      "arcana": "minor",
-      "suit": {
-        "essence": "dynamism",
-        "faction": "marauders",
-        "element": "air",
-        "tarotSuit": "swords"
-      },
-      "imagePath": "/assets/mage/dynamism/7 of Dynamism.png",
-      "uprightMeaning": "Deception, betrayal, sneakiness, strategic planning, cunning",
-      "reversedMeaning": "Imposter syndrome, self-deceit, truth revealed, conscience",
-      "keywords": ["deception", "strategy", "sneakiness", "cunning"],
-      "orientation": "upright",
-      "position": 1
-    },
-    {
-      "id": 23,
-      "name": "Two of Questing",
-      "arcana": "minor",
-      "suit": {
-        "essence": "questing",
-        "faction": "traditions",
-        "element": "fire",
-        "tarotSuit": "wands"
-      },
-      "imagePath": "/assets/mage/questing/2 of Questing.png",
-      "uprightMeaning": "Future planning, making decisions, balancing paradigms, choosing your path",
-      "reversedMeaning": "Indecision, fear of change, avoidance, resistance to growth",
-      "keywords": ["planning", "choices", "balance", "discovery"],
-      "orientation": "reversed",
-      "position": 2
-    },
-    {
-      "id": 70,
-      "name": "Seven of Pattern",
-      "arcana": "minor",
-      "suit": {
-        "essence": "pattern",
-        "faction": "technocracy",
-        "element": "earth",
-        "tarotSuit": "pentacles"
-      },
-      "imagePath": "/assets/mage/pattern/7 Pattern.png",
-      "uprightMeaning": "Long-term view, perseverance, investment, patience, reward",
-      "reversedMeaning": "Impatience, lack of progress, frustration, limited success",
-      "keywords": ["patience", "perseverance", "investment", "reward"],
-      "orientation": "upright",
-      "position": 3
-    },
-    {
-      "id": 69,
-      "name": "Six of Pattern",
-      "arcana": "minor",
-      "suit": {
-        "essence": "pattern",
-        "faction": "technocracy",
-        "element": "earth",
-        "tarotSuit": "pentacles"
-      },
-      "imagePath": "/assets/mage/pattern/6 Pattern.png",
-      "uprightMeaning": "Generosity, charity, giving, sharing wealth, balance",
-      "reversedMeaning": "Debt, selfishness, one-sided, strings attached",
-      "keywords": ["generosity", "charity", "sharing", "balance"],
-      "orientation": "reversed",
-      "position": 4
-    },
-    {
-      "id": 34,
-      "name": "King of Questing",
-      "arcana": "minor",
-      "suit": {
-        "essence": "questing",
-        "faction": "traditions",
-        "element": "fire",
-        "tarotSuit": "wands"
-      },
-      "imagePath": "/assets/mage/questing/13 King of Questing.png",
-      "uprightMeaning": "Natural leader, visionary, entrepreneur, bold, inspiring, charismatic",
-      "reversedMeaning": "Ruthless, domineering, tyrant, arrogant, vicious",
-      "keywords": ["leadership", "vision", "charisma", "boldness"],
-      "orientation": "upright",
-      "position": 5
-    },
-    {
-      "id": 13,
-      "name": "Death",
+      "id": 4,
+      "name": "The Emperor",
       "arcana": "major",
-      "imagePath": "/assets/mage/majorArcana/13 Death.png",
-      "uprightMeaning": "Endings, change, transformation, transition, letting go, release",
-      "reversedMeaning": "Resistance to change, personal transformation, inner purging",
-      "keywords": ["transformation", "endings", "change", "transition"],
+      "imagePath": "/assets/mage/majorArcana/4 Tarot Emperor.png",
+      "uprightMeaning": "Authority, establishment, structure, father figure, control",
+      "reversedMeaning": "Domination, excessive control, lack of discipline, inflexibility",
+      "keywords": ["authority", "structure", "control", "stability"],
       "orientation": "reversed",
-      "position": 6
-    },
-    {
-      "id": 77,
-      "name": "Queen of Pattern",
-      "arcana": "minor",
-      "suit": {
-        "essence": "pattern",
-        "faction": "technocracy",
-        "element": "earth",
-        "tarotSuit": "pentacles"
-      },
-      "imagePath": "/assets/mage/pattern/14 Queen of Pattern.png",
-      "uprightMeaning": "Practical, down-to-earth, nurturing, providing, resourceful, trusted",
-      "reversedMeaning": "Self-centeredness, jealousy, smothering, neglect, materialistic",
-      "keywords": ["practical", "nurturing", "resourceful", "trusted"],
-      "orientation": "upright",
-      "position": 7
+      "position": 1
     },
     {
       "id": 57,
@@ -238,28 +136,90 @@ Here is the `json` data of the drawn cards together with the description and oth
       "reversedMeaning": "Self-acceptance, freedom, release, new perspective",
       "keywords": ["trapped", "restricted", "powerless", "victim"],
       "orientation": "reversed",
-      "position": 8
+      "position": 2
     },
     {
-      "id": 41,
-      "name": "Six of Primordialism",
+      "id": 23,
+      "name": "Two of Questing",
       "arcana": "minor",
       "suit": {
-        "essence": "primordialism",
-        "faction": "nephandi",
-        "element": "water",
-        "tarotSuit": "cups"
+        "essence": "questing",
+        "faction": "traditions",
+        "element": "fire",
+        "tarotSuit": "wands"
       },
-      "imagePath": "/assets/mage/primordialism/6 of Primordialism.png",
-      "uprightMeaning": "Nostalgia, memories, childhood, reunion, innocence, joy",
-      "reversedMeaning": "Living in past, stuck, naivety, unrealistic expectations",
-      "keywords": ["nostalgia", "memories", "innocence", "reunion"],
+      "imagePath": "/assets/mage/questing/2 of Questing.png",
+      "uprightMeaning": "Future planning, making decisions, balancing paradigms, choosing your path",
+      "reversedMeaning": "Indecision, fear of change, avoidance, resistance to growth",
+      "keywords": ["planning", "choices", "balance", "discovery"],
       "orientation": "upright",
-      "position": 9
+      "position": 3
     },
     {
-      "id": 61,
-      "name": "Knight of Dynamism",
+      "id": 17,
+      "name": "The Star",
+      "arcana": "major",
+      "imagePath": "/assets/mage/majorArcana/17 The Star.png",
+      "uprightMeaning": "Hope, faith, purpose, renewal, spirituality, inspiration, serenity",
+      "reversedMeaning": "Lack of faith, despair, self-trust, disconnection, hopelessness",
+      "keywords": ["hope", "faith", "renewal", "inspiration"],
+      "orientation": "upright",
+      "position": 4
+    },
+    {
+      "id": 30,
+      "name": "Nine of Questing",
+      "arcana": "minor",
+      "suit": {
+        "essence": "questing",
+        "faction": "traditions",
+        "element": "fire",
+        "tarotSuit": "wands"
+      },
+      "imagePath": "/assets/mage/questing/9 of Questing.png",
+      "uprightMeaning": "Resilience, persistence, test of faith, standing strong, last stand",
+      "reversedMeaning": "Paranoia, refusal to compromise, stubbornness, rigidity",
+      "keywords": ["resilience", "persistence", "boundaries", "strength"],
+      "orientation": "reversed",
+      "position": 5
+    },
+    {
+      "id": 64,
+      "name": "Ace of Pattern",
+      "arcana": "minor",
+      "suit": {
+        "essence": "pattern",
+        "faction": "technocracy",
+        "element": "earth",
+        "tarotSuit": "pentacles"
+      },
+      "imagePath": "/assets/mage/pattern/1 Ace of Pattern.png",
+      "uprightMeaning": "New financial opportunity, prosperity, manifestation, abundance, security",
+      "reversedMeaning": "Lost opportunity, lack of planning, scarcity, instability",
+      "keywords": ["opportunity", "prosperity", "manifestation", "security"],
+      "orientation": "upright",
+      "position": 6
+    },
+    {
+      "id": 71,
+      "name": "Eight of Pattern",
+      "arcana": "minor",
+      "suit": {
+        "essence": "pattern",
+        "faction": "technocracy",
+        "element": "earth",
+        "tarotSuit": "pentacles"
+      },
+      "imagePath": "/assets/mage/pattern/8 Pattern.png",
+      "uprightMeaning": "Apprenticeship, skill development, hard work, dedication, craftsmanship",
+      "reversedMeaning": "Lack of focus, mediocrity, wasted effort, shortcuts",
+      "keywords": ["skill", "dedication", "mastery", "craftsmanship"],
+      "orientation": "upright",
+      "position": 7
+    },
+    {
+      "id": 60,
+      "name": "Page of Dynamism",
       "arcana": "minor",
       "suit": {
         "essence": "dynamism",
@@ -267,11 +227,39 @@ Here is the `json` data of the drawn cards together with the description and oth
         "element": "air",
         "tarotSuit": "swords"
       },
-      "imagePath": "/assets/mage/dynamism/12 Knight of Dynamism.png",
-      "uprightMeaning": "Action, impulsiveness, defending beliefs, assertiveness, quick thinking",
-      "reversedMeaning": "Aggression, tactlessness, recklessness, unfocused energy",
-      "keywords": ["action", "impulsiveness", "assertiveness", "defense"],
-      "orientation": "reversed",
+      "imagePath": "/assets/mage/dynamism/11 Page of Dynamism.png",
+      "uprightMeaning": "Curiosity, restlessness, mental energy, new ideas, vigilance",
+      "reversedMeaning": "Deception, manipulation, all talk no action, lack of planning",
+      "keywords": ["curiosity", "mental energy", "vigilance", "ideas"],
+      "orientation": "upright",
+      "position": 8
+    },
+    {
+      "id": 32,
+      "name": "Page of Questing",
+      "arcana": "minor",
+      "suit": {
+        "essence": "questing",
+        "faction": "traditions",
+        "element": "fire",
+        "tarotSuit": "wands"
+      },
+      "imagePath": "/assets/mage/questing/11 Page of Questing.png",
+      "uprightMeaning": "Inspiration, new ideas, enthusiasm, exploration, curious student",
+      "reversedMeaning": "Procrastination, lack of direction, scattered energy, delays",
+      "keywords": ["inspiration", "enthusiasm", "curiosity", "exploration"],
+      "orientation": "upright",
+      "position": 9
+    },
+    {
+      "id": 8,
+      "name": "Strength",
+      "arcana": "major",
+      "imagePath": "/assets/mage/majorArcana/8 Strength.png",
+      "uprightMeaning": "Inner strength, courage, patience, compassion, self-control",
+      "reversedMeaning": "Self-doubt, weakness, insecurity, low confidence, inadequacy",
+      "keywords": ["courage", "patience", "compassion", "inner strength"],
+      "orientation": "upright",
       "position": 10
     }
   ]
