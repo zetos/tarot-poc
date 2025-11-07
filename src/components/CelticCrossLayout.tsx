@@ -62,7 +62,13 @@ export default function CelticCrossLayout({
           initial="hidden"
           animate="visible"
         >
-          <div className="grid grid-cols-5 grid-rows-5 gap-2 sm:gap-3" style={{ gridTemplateColumns: 'repeat(5, minmax(0, 220px))', gridTemplateRows: 'repeat(5, auto)' }}>
+          <div
+            className="grid grid-cols-5 grid-rows-5 gap-2 sm:gap-3"
+            style={{
+              gridTemplateColumns: "repeat(5, minmax(0, 220px))",
+              gridTemplateRows: "repeat(5, auto)",
+            }}
+          >
             {[5].map((pos) => {
               const card = getCardByPosition(pos);
               const posInfo = getPositionInfo(pos);
@@ -83,7 +89,7 @@ export default function CelticCrossLayout({
               );
             })}
 
-            {[3].map((pos) => {
+            {[4].map((pos) => {
               const card = getCardByPosition(pos);
               const posInfo = getPositionInfo(pos);
               if (!card || !posInfo) return null;
@@ -111,7 +117,7 @@ export default function CelticCrossLayout({
                 <motion.div
                   key={pos}
                   className="col-start-3 row-start-3 z-10"
-                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: -80 }}
+                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: -0 }}
                   variants={cardVariants}
                 >
                   <TarotCard
@@ -131,14 +137,14 @@ export default function CelticCrossLayout({
                 <motion.div
                   key={pos}
                   className="col-start-3 row-start-3 z-20"
-                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: 80 }}
+                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: 100 }}
                   variants={cardVariants}
                 >
                   <TarotCard
                     card={card}
                     positionName={posInfo.name}
                     onClick={() => onCardClick(card, posInfo)}
-                    className="rotate-90"
+                    className="-rotate-45"
                   />
                 </motion.div>
               );
@@ -164,7 +170,7 @@ export default function CelticCrossLayout({
               );
             })}
 
-            {[4].map((pos) => {
+            {[3].map((pos) => {
               const card = getCardByPosition(pos);
               const posInfo = getPositionInfo(pos);
               if (!card || !posInfo) return null;

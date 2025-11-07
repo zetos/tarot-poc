@@ -3,12 +3,14 @@ import type { Spread } from "@/types/tarot";
 export const celticCross: Spread = {
   id: "celtic-cross",
   name: "The Celtic Cross",
-  description: "A comprehensive 10-card spread offering deep insights into your question, covering past, present, and future influences",
+  description:
+    "A comprehensive 10-card spread offering deep insights into your question, covering past, present, and future influences",
   positions: [
     {
       position: 1,
       name: "Present Situation",
-      description: "The current state of affairs and the central theme of the reading",
+      description:
+        "The current state of affairs and the central theme of the reading",
     },
     {
       position: 2,
@@ -17,8 +19,9 @@ export const celticCross: Spread = {
     },
     {
       position: 3,
-      name: "Distant Past",
-      description: "Past events and influences that have shaped the current situation",
+      name: "Below",
+      description:
+        "Unconscious influences, hidden roots, and unknown factors that shape your current circumstances from beneath the surface",
     },
     {
       position: 4,
@@ -27,8 +30,9 @@ export const celticCross: Spread = {
     },
     {
       position: 5,
-      name: "Possible Future",
-      description: "Potential outcomes and what may come to be",
+      name: "Above",
+      description:
+        "Conscious thoughts, goals, and aspirations that occupy your mind",
     },
     {
       position: 6,
@@ -37,13 +41,15 @@ export const celticCross: Spread = {
     },
     {
       position: 7,
-      name: "Your Attitude",
-      description: "Your current mindset, feelings, and approach to the situation",
+      name: "The Self",
+      description:
+        "Your inner landscape in this moment, and the personal approach you're bringing to navigate the situation",
     },
     {
       position: 8,
       name: "External Influences",
-      description: "How others see you and external factors affecting the situation",
+      description:
+        "How others see you and external factors affecting the situation",
     },
     {
       position: 9,
@@ -61,12 +67,14 @@ export const celticCross: Spread = {
 export const circular7Weekly: Spread = {
   id: "circular-7-weekly",
   name: "The Circular Spread (Weekly)",
-  description: "A 7-card circular spread representing the days of the week, suggesting a course of action or state of mind for each day",
+  description:
+    "A 7-card circular spread representing the days of the week, suggesting a course of action or state of mind for each day",
   positions: [
     {
       position: 1,
       name: "Sunday",
-      description: "The beginning of the week - foundational energy and starting point",
+      description:
+        "The beginning of the week - foundational energy and starting point",
     },
     {
       position: 2,
@@ -96,7 +104,8 @@ export const circular7Weekly: Spread = {
     {
       position: 7,
       name: "Saturday",
-      description: "Rest and reflection - culmination and preparation for the next cycle",
+      description:
+        "Rest and reflection - culmination and preparation for the next cycle",
     },
   ],
 };
@@ -104,17 +113,20 @@ export const circular7Weekly: Spread = {
 export const circular12Yearly: Spread = {
   id: "circular-12-yearly",
   name: "The Circular Spread (Yearly)",
-  description: "A 12-card circular spread representing the months of the year, suggesting guidance and themes for each month ahead",
+  description:
+    "A 12-card circular spread representing the months of the year, suggesting guidance and themes for each month ahead",
   positions: [
     {
       position: 1,
       name: "January",
-      description: "New beginnings and fresh starts - setting the tone for the year",
+      description:
+        "New beginnings and fresh starts - setting the tone for the year",
     },
     {
       position: 2,
       name: "February",
-      description: "Building foundations - early year challenges and opportunities",
+      description:
+        "Building foundations - early year challenges and opportunities",
     },
     {
       position: 3,
@@ -154,7 +166,8 @@ export const circular12Yearly: Spread = {
     {
       position: 10,
       name: "October",
-      description: "Transformation and release - letting go of what no longer serves",
+      description:
+        "Transformation and release - letting go of what no longer serves",
     },
     {
       position: 11,
@@ -164,9 +177,14 @@ export const circular12Yearly: Spread = {
     {
       position: 12,
       name: "December",
-      description: "Completion and celebration - closing the cycle and preparing for renewal",
+      description:
+        "Completion and celebration - closing the cycle and preparing for renewal",
     },
   ],
 };
 
-export const spreads: Spread[] = [celticCross, circular7Weekly, circular12Yearly];
+export const spreads: Spread[] = [
+  celticCross,
+  circular7Weekly,
+  circular12Yearly,
+];
