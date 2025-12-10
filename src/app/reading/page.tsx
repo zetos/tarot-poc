@@ -109,6 +109,7 @@ export default function ReadingPage() {
 
       <CardDetails
         card={selectedCard}
+        orientation={selectedCard?.orientation || "upright"}
         positionInfo={selectedPosition}
         onCloseAction={handleCloseDetails}
       />

@@ -3,24 +3,26 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { DrawnCard, SpreadPosition } from "@/types/tarot";
+import type { TarotCard, SpreadPosition, CardOrientation } from "@/types/tarot";
 
 type CardDetailsProps = {
-  card: DrawnCard | null;
-  positionInfo: SpreadPosition | null;
+  card: TarotCard | null;
+  orientation: CardOrientation;
+  positionInfo?: SpreadPosition | null;
   onCloseAction: () => void;
 };
 
 export default function CardDetails({
   card,
+  orientation,
   positionInfo,
   onCloseAction,
 }: CardDetailsProps) {
   const [imageError, setImageError] = useState(false);
 
-  if (!card || !positionInfo) return null;
+  if (!card) return null;
 
-  const isReversed = card.orientation === "reversed";
+  const isReversed = orientation === "reversed";
   const meaning = isReversed ? card.reversedMeaning : card.uprightMeaning;
 
   const getElementColor = (element: string) => {
@@ -119,14 +121,16 @@ export default function CardDetails({
                 )}
               </div>
             </div>
-            <div className="bg-mage-purple-900/40 rounded-lg p-4 border border-mage-gold-800/20">
-              <h3 className="font-visit font-semibold mb-2 text-sm text-mage-gold-600">
-                Position {positionInfo.position}: {positionInfo.name}
-              </h3>
-              <p className="text-sm text-mage-gold-500">
-                {positionInfo.description}
-              </p>
-            </div>
+            {positionInfo && (
+              <div className="bg-mage-purple-900/40 rounded-lg p-4 border border-mage-gold-800/20">
+                <h3 className="font-visit font-semibold mb-2 text-sm text-mage-gold-600">
+                  Position {positionInfo.position}: {positionInfo.name}
+                </h3>
+                <p className="text-sm text-mage-gold-500">
+                  {positionInfo.description}
+                </p>
+              </div>
+            )}
 
             <div>
               <h3 className="font-visit font-semibold mb-2 text-mage-gold-700">Meaning</h3>
