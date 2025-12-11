@@ -7,7 +7,7 @@ import type { Variants } from 'framer-motion';
 import {
   majorArcana,
   questingCards,
-  primordialismoCards,
+  primordialismCards,
   dynamismCards,
   patternCards,
 } from '@/data/cards';
@@ -24,7 +24,7 @@ export default function Cards() {
     { title: 'Questing (Fire)', cards: questingCards, key: 'Questing' },
     {
       title: 'Primordialism (Water)',
-      cards: primordialismoCards,
+      cards: primordialismCards,
       key: 'Primordialism',
     },
     { title: 'Dynamism (Air)', cards: dynamismCards, key: 'Dynamism' },
@@ -68,7 +68,7 @@ export default function Cards() {
           {section.title}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {section.cards.map((card) => (
+          {section.cards.map((card: TarotCard) => (
             <motion.div
               key={card.id}
               className="bg-mage-purple-800/80 rounded-lg border-2 border-mage-gold-700/40 overflow-hidden cursor-pointer"

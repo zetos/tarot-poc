@@ -1,8 +1,30 @@
 export type Suit =
-  | { essence: 'questing'; faction: 'traditions'; element: 'fire'; tarotSuit: 'wands' }
-  | { essence: 'primordialism'; faction: 'nephandi'; element: 'water'; tarotSuit: 'cups' }
-  | { essence: 'dynamism'; faction: 'marauders'; element: 'air'; tarotSuit: 'swords' }
-  | { essence: 'pattern'; faction: 'technocracy'; element: 'earth'; tarotSuit: 'pentacles' };
+  | {
+      essence: 'questing';
+      faction: 'traditions';
+      element: 'fire';
+      tarotSuit: 'wands';
+      // virtues: ['Creativity', 'Energy', 'Diversity'];
+      // vices: ['Restlessness', 'Pride', 'Obstinance'];
+    }
+  | {
+      essence: 'primordialism';
+      faction: 'nephandi';
+      element: 'water';
+      tarotSuit: 'cups';
+    }
+  | {
+      essence: 'dynamism';
+      faction: 'marauders';
+      element: 'air';
+      tarotSuit: 'swords';
+    }
+  | {
+      essence: 'pattern';
+      faction: 'technocracy';
+      element: 'earth';
+      tarotSuit: 'pentacles';
+    };
 
 export type TarotCard = {
   id: number;
@@ -13,6 +35,7 @@ export type TarotCard = {
   uprightMeaning: string;
   reversedMeaning: string;
   keywords: string[];
+  flavorText: string;
 };
 
 export type ReadingQuestion = {
