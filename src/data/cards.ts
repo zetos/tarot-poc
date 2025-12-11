@@ -32,10 +32,10 @@ export const majorArcana: TarotCard[] = [
     arcana: 'major',
     imagePath: '/assets/mage/majorArcana/0 Fool.png',
     uprightMeaning:
-      'New beginnings, innocence, spontaneity, free spirit, leap of faith',
+      'Possibility, courage, ecstasy, creative expression, risk-taking, trust, adventure spontaneity, free spirit, leap of faith',
     reversedMeaning:
-      'Recklessness, taken advantage of, inconsideration, naivety',
-    keywords: ['beginnings', 'innocence', 'spontaneity', 'free spirit'],
+      'Stagnation, eccentricity, folly, thoughtlessness, indiscretion',
+    keywords: ['beginnings', 'possibility', 'spontaneity', 'free spirit'],
     flavorText:
       'The Faerie: Clad in the vestments of mortal experience and spiritual awareness, the child of the Dreaming stands poised on the edge of physical reality, open to the embrace of all possibility. The sword of his manifest will rests easily upon his shoulder, for the time of choice has not yet come.',
   },
@@ -45,9 +45,9 @@ export const majorArcana: TarotCard[] = [
     arcana: 'major',
     imagePath: '/assets/mage/majorArcana/1 Mage.png',
     uprightMeaning:
-      'Manifestation, resourcefulness, power, inspired action, willpower',
-    reversedMeaning: 'Manipulation, poor planning, untapped talents, illusions',
-    keywords: ['manifestation', 'power', 'action', 'resourcefulness'],
+      'Will, communication, inherent ability, memory, clarity of thought and feeling, organization, invention, originality',
+    reversedMeaning: 'Weakness, indecision, manipulation',
+    keywords: ['will', 'clarity', 'invention', 'originality'],
     flavorText:
       '“What is will but the projection of energy into the world of matter?” With an act of conscious thought, Dante grasps the wand of Prime, closing the link between the energy that gives him the power of magic and the tools that lie before him on the table of the world. The building blocks of his desires — the Primordial, Questing, Dynamic and Pattern Essences — contain within them the remaining eight Spheres of magic; the key to knowledge unlocks them all. The infinite hovers, crown-like, above him. Reality, virtual or otherwise, belongs to him.',
   },
