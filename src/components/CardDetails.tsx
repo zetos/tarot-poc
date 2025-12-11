@@ -119,8 +119,18 @@ export default function CardDetails({
                     </p>
                   </div>
                 )}
+
               </div>
+
             </div>
+
+            {card.flavorText && (
+              <div>
+                <h3 className="font-visit font-semibold mb-2 text-mage-gold-700">Flavor Text</h3>
+                <p className="text-mage-gold-500 leading-relaxed italic">{card.flavorText}</p>
+              </div>
+            )}
+
             {positionInfo && (
               <div className="bg-mage-purple-900/40 rounded-lg p-4 border border-mage-gold-800/20">
                 <h3 className="font-visit font-semibold mb-2 text-sm text-mage-gold-600">
