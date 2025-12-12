@@ -12,6 +12,18 @@ import type { AIReadingResponse, DrawnCard, ReadingResponse, SpreadPosition } fr
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+/**
+ * Render the reading page UI for a stored tarot reading, showing the selected spread, question,
+ * interactive card layouts, card details panel, controls to start a new reading, and an optional
+ * AI-generated interpretation.
+ *
+ * The component loads a saved reading from storage on mount and redirects to the root if absent.
+ * It validates spread and question data, manages selected card/position state, and provides a
+ * handler to request an AI interpretation from the server. Loading and error states for the
+ * AI request are reflected in the UI.
+ *
+ * @returns The React element tree for the Reading page.
+ */
 export default function ReadingPage() {
   const router = useRouter();
   const [reading, setReading] = useState<ReadingResponse | null>(null);
