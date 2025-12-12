@@ -5,6 +5,14 @@ import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import type { AIReadingRequest, AIReadingResponse } from '@/types/tarot';
 
+/**
+ * Handle POST requests to generate an AI tarot reading interpretation.
+ *
+ * Validates the request body (expects `questionId`, `spreadId`, and `cards`), ensures the chosen question and spread exist and the card count matches the spread, formats a prompt for the tarot agent, and returns the agent's interpretation or a JSON error with an appropriate HTTP status.
+ *
+ * @param request - Incoming HTTP request whose JSON body must conform to `AIReadingRequest` (contains `questionId`, `spreadId`, and `cards`).
+ * @returns A NextResponse containing `AIReadingResponse` with `{ interpretation: string }` on success, or a JSON error object `{ error: string }` with an appropriate HTTP status on failure.
+ */
 export async function POST(request: Request) {
   try {
     // Check for API key
