@@ -17,7 +17,7 @@
     "isolatedModules": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "incremental": true,
     "plugins": [
       {
