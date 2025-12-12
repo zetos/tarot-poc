@@ -1,21 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import CelticCrossLayout from "@/components/CelticCrossLayout";
-import CircularSpread7Layout from "@/components/CircularSpread7Layout";
-import CircularSpread12Layout from "@/components/CircularSpread12Layout";
+import AIInterpretation from "@/components/AIInterpretation";
 import CardDetails from "@/components/CardDetails";
-import { getReading, clearReading } from "@/lib/reading-storage";
-import { spreads } from "@/data/spreads";
+import CelticCrossLayout from "@/components/CelticCrossLayout";
+import CircularSpread12Layout from "@/components/CircularSpread12Layout";
+import CircularSpread7Layout from "@/components/CircularSpread7Layout";
 import { readingQuestions } from "@/data/questions";
-import type { ReadingResponse, DrawnCard, SpreadPosition } from "@/types/tarot";
+import { spreads } from "@/data/spreads";
+import { clearReading, getReading } from "@/lib/reading-storage";
+import type { AIReadingResponse, DrawnCard, ReadingResponse, SpreadPosition } from "@/types/tarot";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ReadingPage() {
   const router = useRouter();
   const [reading, setReading] = useState<ReadingResponse | null>(null);
   const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<SpreadPosition | null>(null);
+  const [aiInterpretation, setAiInterpretation] = useState<string | null>(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   useEffect(() => {
     const data = getReading();
@@ -60,6 +64,41 @@ export default function ReadingPage() {
     router.push("/");
   };
 
+  const handleGetAIReading = async () => {
+    if (!reading) return;
+
+    setIsLoadingAI(true);
+    setAiError(null);
+
+    try {
+      const response = await fetch("/api/reading/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: reading.questionId,
+          spreadId: reading.spreadId,
+          cards: reading.cards,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to generate AI reading");
+      }
+
+      const data: AIReadingResponse = await response.json();
+      setAiInterpretation(data.interpretation);
+    } catch (error) {
+      setAiError(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
+
   return (
     <div className="min-h-screen p-4 sm:p-8 bg-mage-purple-950 text-mage-gold-700">
       <div className="max-w-7xl mx-auto">
@@ -97,7 +136,28 @@ export default function ReadingPage() {
           )}
         </div>
 
-        <div className="text-center">
+        {!aiInterpretation && !isLoadingAI && (
+          <div className="text-center mt-8">
+            <button
+              onClick={handleGetAIReading}
+              className="px-8 py-4 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium text-lg hover:bg-mage-gold-600 transition-colors shadow-lg"
+            >
+              Get AI Reading
+            </button>
+            <p className="text-sm text-mage-gold-500 mt-3">
+              Receive an interpretation from Granny
+            </p>
+          </div>
+        )}
+
+        <AIInterpretation
+          interpretation={aiInterpretation}
+          isLoading={isLoadingAI}
+          error={aiError}
+          onRetry={handleGetAIReading}
+        />
+
+        <div className="text-center mt-8">
           <button
             onClick={handleNewReading}
             className="px-6 py-3 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium hover:bg-mage-gold-600 transition-colors"
