@@ -5,6 +5,17 @@ type AIInterpretationProps = {
   onRetry: () => void;
 };
 
+/**
+ * Render a card UI that shows a loading skeleton, an error message with retry, or a formatted interpretation.
+ *
+ * Renders nothing when not loading, there is no error, and no interpretation is present.
+ *
+ * @param interpretation - Raw interpretation text; newline characters separate paragraphs. May be `null`.
+ * @param isLoading - Whether the interpretation is being fetched.
+ * @param error - Error message to display when the reading failed. May be `null`.
+ * @param onRetry - Callback invoked when the user clicks "Try Again".
+ * @returns The rendered UI for the current state, or `null` when there is nothing to show.
+ */
 export default function AIInterpretation({
   interpretation,
   isLoading,
