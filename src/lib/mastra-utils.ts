@@ -12,6 +12,13 @@ export function formatReadingForAgent(
   question: ReadingQuestion,
   spread: Spread
 ): string {
+  // Validate card count matches spread positions
+  if (cards.length !== spread.positions.length) {
+    throw new Error(
+      `The cards don't match the chosen spread. Expected ${spread.positions.length} cards but received ${cards.length}.`
+    );
+  }
+
   const header = `Question: ${question.label}
 ${question.description}
 
@@ -29,7 +36,9 @@ Cards Drawn:
           ? card.uprightMeaning
           : card.reversedMeaning;
 
-      return `Position ${position.position} - ${position.name}: ${card.name} (${card.orientation})
+      return `Position ${position.position} - ${position.name}: ${card.name} (${
+        card.orientation
+      })
   Position Meaning: ${position.description}
   Card Keywords: ${card.keywords.join(', ')}
   Card Interpretation: ${meaning}
@@ -37,7 +46,5 @@ Cards Drawn:
     })
     .join('\n\n');
 
-  const footer = `\n\nProvide a comprehensive tarot reading interpretation addressing the querent's question. Speak as Granny Weatherwax would - with authority, wisdom, and a touch of sharp wit. Connect the cards to their positions and weave them into a cohesive narrative that provides practical, insightful guidance.`;
-
-  return `${header}${cardDescriptions}${footer}`;
+  return `${header}${cardDescriptions}`;
 }

@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
 import { tarotReadingAgent } from '@/agents/tarotAgent';
-import { formatReadingForAgent } from '@/lib/mastra-utils';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
+import { formatReadingForAgent } from '@/lib/mastra-utils';
 import type { AIReadingRequest, AIReadingResponse } from '@/types/tarot';
+import { NextResponse } from 'next/server';
 
 /**
  * Handle POST requests to generate an AI tarot reading interpretation.
@@ -18,7 +18,10 @@ export async function POST(request: Request) {
     // Check for API key
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
-        { error: 'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.' },
+        {
+          error:
+            'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.',
+        },
         { status: 500 }
       );
     }
@@ -30,7 +33,10 @@ export async function POST(request: Request) {
     // Validate required fields
     if (!questionId || !spreadId || !cards || cards.length === 0) {
       return NextResponse.json(
-        { error: 'Missing required fields: questionId, spreadId, and cards are required' },
+        {
+          error:
+            'Missing required fields: questionId, spreadId, and cards are required',
+        },
         { status: 400 }
       );
     }
@@ -47,16 +53,15 @@ export async function POST(request: Request) {
     }
 
     if (!spread) {
-      return NextResponse.json(
-        { error: 'Invalid spreadId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid spreadId' }, { status: 400 });
     }
 
     // Validate card count matches spread positions
     if (cards.length !== spread.positions.length) {
       return NextResponse.json(
-        { error: `Card count (${cards.length}) does not match spread positions (${spread.positions.length})` },
+        {
+          error: `Card count (${cards.length}) does not match spread positions (${spread.positions.length})`,
+        },
         { status: 400 }
       );
     }
@@ -64,30 +69,41 @@ export async function POST(request: Request) {
     // Format the reading for the AI agent
     const prompt = formatReadingForAgent(cards, question, spread);
 
-    console.log('Generating AI reading with prompt length:', prompt.length);
-
     // Generate the interpretation using Mastra agent
     const response = await tarotReadingAgent.generate(prompt);
 
-    console.log('AI reading generated successfully');
-    console.log('Token usage:', response.usage);
+    // Validate response structure
+    if (
+      !response ||
+      typeof response.text !== 'string' ||
+      !response.text.trim()
+    ) {
+      throw new Error('The reading could not be completed. Please try again.');
+    }
 
     // Build response
     const aiResponse: AIReadingResponse = {
       interpretation: response.text,
+      // Future: Include token usage for cost tracking
+      // usage: response.usage ? {
+      //   promptTokens: response.usage.promptTokens,
+      //   completionTokens: response.usage.completionTokens,
+      //   totalTokens: response.usage.totalTokens,
+      // } : undefined,
     };
 
     return NextResponse.json(aiResponse);
   } catch (error) {
     console.error('Error in AI reading API:', error);
-    
+
     // Provide helpful error message
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : 'An unknown error occurred while generating the AI reading';
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'An unknown error occurred while generating the AI reading';
 
     return NextResponse.json(
-      { error: `Failed to generate AI reading: ${errorMessage}` },
+      { error: `Granny couldn't complete the reading. ${errorMessage}` },
       { status: 500 }
     );
   }

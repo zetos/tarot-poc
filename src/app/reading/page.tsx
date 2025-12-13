@@ -10,7 +10,7 @@ import { spreads } from "@/data/spreads";
 import { clearReading, getReading } from "@/lib/reading-storage";
 import type { AIReadingResponse, DrawnCard, ReadingResponse, SpreadPosition } from "@/types/tarot";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 /**
  * Render the reading page UI for a stored tarot reading, showing the selected spread, question,
@@ -32,6 +32,7 @@ export default function ReadingPage() {
   const [aiInterpretation, setAiInterpretation] = useState<string | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const data = getReading();
@@ -41,6 +42,16 @@ export default function ReadingPage() {
     }
     setReading(data);
   }, [router]);
+
+  // Cleanup AbortController on component unmount
+  useEffect(() => {
+    return () => {
+      // Abort any pending AI requests when component unmounts
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   if (!reading) {
     return (
@@ -82,6 +93,10 @@ export default function ReadingPage() {
     setIsLoadingAI(true);
     setAiError(null);
 
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    const timeoutId = setTimeout(() => abortController.abort(), 90000); // 90 second timeout
+
     try {
       const response = await fetch("/api/reading/ai", {
         method: "POST",
@@ -93,20 +108,26 @@ export default function ReadingPage() {
           spreadId: reading.spreadId,
           cards: reading.cards,
         }),
+        signal: abortController.signal,
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to generate AI reading");
+        throw new Error(error.error || "The reading could not be completed");
       }
 
       const data: AIReadingResponse = await response.json();
       setAiInterpretation(data.interpretation);
     } catch (error) {
-      setAiError(
-        error instanceof Error ? error.message : "Unknown error occurred"
-      );
+      if (error instanceof Error && error.name === 'AbortError') {
+        setAiError("The reading took too long to complete. Please try again.");
+      } else {
+        setAiError(
+          error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
+        );
+      }
     } finally {
+      clearTimeout(timeoutId);
       setIsLoadingAI(false);
     }
   };
