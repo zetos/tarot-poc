@@ -1,21 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import CelticCrossLayout from "@/components/CelticCrossLayout";
-import CircularSpread7Layout from "@/components/CircularSpread7Layout";
-import CircularSpread12Layout from "@/components/CircularSpread12Layout";
+import AIInterpretation from "@/components/AIInterpretation";
 import CardDetails from "@/components/CardDetails";
-import { getReading, clearReading } from "@/lib/reading-storage";
-import { spreads } from "@/data/spreads";
+import CelticCrossLayout from "@/components/CelticCrossLayout";
+import CircularSpread12Layout from "@/components/CircularSpread12Layout";
+import CircularSpread7Layout from "@/components/CircularSpread7Layout";
 import { readingQuestions } from "@/data/questions";
-import type { ReadingResponse, DrawnCard, SpreadPosition } from "@/types/tarot";
+import { spreads } from "@/data/spreads";
+import { clearReading, getReading } from "@/lib/reading-storage";
+import type { AIReadingResponse, DrawnCard, ReadingResponse, SpreadPosition } from "@/types/tarot";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
 
+/**
+ * Render the reading page UI for a stored tarot reading, showing the selected spread, question,
+ * interactive card layouts, card details panel, controls to start a new reading, and an optional
+ * AI-generated interpretation.
+ *
+ * The component loads a saved reading from storage on mount and redirects to the root if absent.
+ * It validates spread and question data, manages selected card/position state, and provides a
+ * handler to request an AI interpretation from the server. Loading and error states for the
+ * AI request are reflected in the UI.
+ *
+ * @returns The React element tree for the Reading page.
+ */
 export default function ReadingPage() {
   const router = useRouter();
   const [reading, setReading] = useState<ReadingResponse | null>(null);
   const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<SpreadPosition | null>(null);
+  const [aiInterpretation, setAiInterpretation] = useState<string | null>(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     const data = getReading();
@@ -25,6 +42,16 @@ export default function ReadingPage() {
     }
     setReading(data);
   }, [router]);
+
+  // Cleanup AbortController on component unmount
+  useEffect(() => {
+    return () => {
+      // Abort any pending AI requests when component unmounts
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   if (!reading) {
     return (
@@ -58,6 +85,51 @@ export default function ReadingPage() {
   const handleNewReading = () => {
     clearReading();
     router.push("/");
+  };
+
+  const handleGetAIReading = async () => {
+    if (!reading) return;
+
+    setIsLoadingAI(true);
+    setAiError(null);
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    const timeoutId = setTimeout(() => abortController.abort(), 90000); // 90 second timeout
+
+    try {
+      const response = await fetch("/api/reading/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: reading.questionId,
+          spreadId: reading.spreadId,
+          cards: reading.cards,
+        }),
+        signal: abortController.signal,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "The reading could not be completed");
+      }
+
+      const data: AIReadingResponse = await response.json();
+      setAiInterpretation(data.interpretation);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        setAiError("The reading took too long to complete. Please try again.");
+      } else {
+        setAiError(
+          error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
+        );
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      setIsLoadingAI(false);
+    }
   };
 
   return (
@@ -97,13 +169,39 @@ export default function ReadingPage() {
           )}
         </div>
 
-        <div className="text-center">
-          <button
-            onClick={handleNewReading}
-            className="px-6 py-3 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium hover:bg-mage-gold-600 transition-colors"
-          >
-            New Reading
-          </button>
+        <AIInterpretation
+          interpretation={aiInterpretation}
+          isLoading={isLoadingAI}
+          error={aiError}
+          onRetry={handleGetAIReading}
+        />
+
+        {/* Modern Action Bar - Side-by-side button layout */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <div className="bg-mage-purple-800/40 backdrop-blur-sm border border-mage-gold-800/30 rounded-xl p-6 shadow-xl">
+            <div className="flex flex-col md:flex-row gap-4 items-stretch">
+              {/* Primary Action - Consult Granny (only show if no interpretation yet) */}
+              {!aiInterpretation && !isLoadingAI && (
+                <button
+                  onClick={handleGetAIReading}
+                  className="flex-1 px-8 py-4 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-semibold text-lg hover:bg-mage-gold-600 hover:shadow-2xl hover:scale-105 transition-all duration-300 focus:ring-2 focus:ring-mage-gold-600 focus:outline-none cursor-pointer"
+                >
+                  Consult Granny
+                </button>
+              )}
+
+              {/* Secondary Action - New Reading (always visible) */}
+              <button
+                onClick={handleNewReading}
+                className={`${!aiInterpretation && !isLoadingAI ? 'flex-1' : 'w-full'} px-8 py-4 border-2 border-mage-gold-700 text-mage-gold-700 bg-transparent rounded-lg font-semibold text-lg hover:bg-mage-gold-700/10 hover:shadow-lg hover:scale-105 transition-all duration-300 focus:ring-2 focus:ring-mage-gold-600 focus:outline-none cursor-pointer group`}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <span className="text-xl group-hover:rotate-180 transition-transform duration-500">↻</span>
+                  <span>New Reading</span>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

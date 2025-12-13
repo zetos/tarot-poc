@@ -81,3 +81,19 @@ export type ReadingResponse = {
   spreadId: string;
   cards: DrawnCard[];
 };
+
+export type AIReadingRequest = {
+  questionId: string;
+  spreadId: string;
+  cards: DrawnCard[];
+};
+
+export type AIReadingResponse = {
+  interpretation: string;
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  error?: string;
+};
