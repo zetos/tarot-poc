@@ -136,20 +136,6 @@ export default function ReadingPage() {
           )}
         </div>
 
-        {!aiInterpretation && !isLoadingAI && (
-          <div className="text-center mt-8">
-            <button
-              onClick={handleGetAIReading}
-              className="px-8 py-4 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium text-lg hover:bg-mage-gold-600 transition-colors shadow-lg"
-            >
-              Get AI Reading
-            </button>
-            <p className="text-sm text-mage-gold-500 mt-3">
-              Receive an interpretation from Granny
-            </p>
-          </div>
-        )}
-
         <AIInterpretation
           interpretation={aiInterpretation}
           isLoading={isLoadingAI}
@@ -157,13 +143,32 @@ export default function ReadingPage() {
           onRetry={handleGetAIReading}
         />
 
-        <div className="text-center mt-8">
-          <button
-            onClick={handleNewReading}
-            className="px-6 py-3 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-medium hover:bg-mage-gold-600 transition-colors"
-          >
-            New Reading
-          </button>
+        {/* Modern Action Bar - Side-by-side button layout */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <div className="bg-mage-purple-800/40 backdrop-blur-sm border border-mage-gold-800/30 rounded-xl p-6 shadow-xl">
+            <div className="flex flex-col md:flex-row gap-4 items-stretch">
+              {/* Primary Action - Consult Granny (only show if no interpretation yet) */}
+              {!aiInterpretation && !isLoadingAI && (
+                <button
+                  onClick={handleGetAIReading}
+                  className="flex-1 px-8 py-4 bg-mage-gold-700 text-mage-purple-950 rounded-lg font-semibold text-lg hover:bg-mage-gold-600 hover:shadow-2xl hover:scale-105 transition-all duration-300 focus:ring-2 focus:ring-mage-gold-600 focus:outline-none cursor-pointer"
+                >
+                  Consult Granny
+                </button>
+              )}
+
+              {/* Secondary Action - New Reading (always visible) */}
+              <button
+                onClick={handleNewReading}
+                className={`${!aiInterpretation && !isLoadingAI ? 'flex-1' : 'w-full'} px-8 py-4 border-2 border-mage-gold-700 text-mage-gold-700 bg-transparent rounded-lg font-semibold text-lg hover:bg-mage-gold-700/10 hover:shadow-lg hover:scale-105 transition-all duration-300 focus:ring-2 focus:ring-mage-gold-600 focus:outline-none cursor-pointer group`}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <span className="text-xl group-hover:rotate-180 transition-transform duration-500">↻</span>
+                  <span>New Reading</span>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

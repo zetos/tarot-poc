@@ -83,7 +83,7 @@ export default function AIInterpretation({
           {paragraphs.map((paragraph, index) => (
             <p
               key={index}
-              className="font-visit text-lg text-mage-gold-600 leading-relaxed"
+              className="text-lg text-mage-gold-600 leading-relaxed"
             >
               {paragraph}
             </p>
