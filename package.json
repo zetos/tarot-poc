@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@mastra/core": "^0.24.8",
     "framer-motion": "^12.23.24",
     "next": "16.0.10",
     "react": "19.2.3",
