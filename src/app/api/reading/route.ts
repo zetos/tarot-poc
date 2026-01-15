@@ -8,19 +8,28 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const body: ReadingRequest = await request.json();
-    const { questionId, spreadId } = body;
+    const { questionId, spreadId, customQuestion } = body;
 
-    if (!questionId || !spreadId) {
+    if ((!questionId || questionId === 'custom') && !customQuestion) {
       return NextResponse.json(
-        { error: 'Missing questionId or spreadId' },
+        { error: 'Missing questionId or customQuestion' },
         { status: 400 }
       );
     }
 
-    const question = readingQuestions.find((q) => q.id === questionId);
+    if (!spreadId) {
+      return NextResponse.json(
+        { error: 'Missing spreadId' },
+        { status: 400 }
+      );
+    }
+
+    const question = questionId && questionId !== 'custom' 
+      ? readingQuestions.find((q) => q.id === questionId)
+      : null;
     const spread = spreads.find((s) => s.id === spreadId);
 
-    if (!question) {
+    if (questionId && questionId !== 'custom' && !question) {
       return NextResponse.json(
         { error: 'Invalid questionId' },
         { status: 400 }
@@ -35,9 +44,10 @@ export async function POST(request: Request) {
     const drawnCards = drawCards(allCards, cardCount);
 
     const response: ReadingResponse = {
-      questionId,
+      questionId: questionId || 'custom',
       spreadId,
       cards: drawnCards,
+      customQuestion,
     };
 
     return NextResponse.json(response);

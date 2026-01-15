@@ -3,7 +3,7 @@ import type { DrawnCard, ReadingQuestion, Spread } from '@/types/tarot';
 /**
  * Formats a tarot reading into a comprehensive prompt for the AI agent
  * @param cards - Array of drawn cards with orientations
- * @param question - The question being asked
+ * @param question - The question being asked (can be a custom question with synthetic object)
  * @param spread - The spread being used
  * @returns Formatted prompt string for the Mastra agent
  */
@@ -19,10 +19,12 @@ export function formatReadingForAgent(
     );
   }
 
-  const header = `Question: ${question.label}
-${question.description}
+  const isCustomQuestion = question.id === 'custom';
 
-Spread: ${spread.name}
+  const header = `Question: ${question.label}
+${!isCustomQuestion ? `${question.description}
+
+` : ''}Spread: ${spread.name}
 ${spread.description}
 
 Cards Drawn:

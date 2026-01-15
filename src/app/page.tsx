@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { AnimatePresence } from 'framer-motion';
+import QuestionInput from '@/components/QuestionInput';
 import Select from '@/components/Select';
 import ShuffleAnimation from '@/components/ShuffleAnimation';
 import { readingQuestions } from '@/data/questions';
@@ -13,6 +14,7 @@ import type { ReadingResponse } from '@/types/tarot';
 export default function Home() {
   const router = useRouter();
   const [selectedQuestion, setSelectedQuestion] = useState('');
+  const [customQuestion, setCustomQuestion] = useState('');
   const [selectedSpread, setSelectedSpread] = useState('');
   const [selectedSpreadData, setSelectedSpreadData] = useState<
     (typeof spreads)[0] | null
@@ -22,9 +24,19 @@ export default function Home() {
   const [readingData, setReadingData] = useState<ReadingResponse | null>(null);
 
   const handleBeginReading = async () => {
-    if (!selectedQuestion || !selectedSpread) {
+    const effectiveQuestionId = customQuestion.trim() ? '' : selectedQuestion;
+    const effectiveCustomQuestion = customQuestion.trim() || undefined;
+
+    if (!effectiveQuestionId && !effectiveCustomQuestion) {
       alert(
-        'Please select both a question and a spread to begin your reading.'
+        'Please select a question or type your own to begin your reading.'
+      );
+      return;
+    }
+
+    if (!selectedSpread) {
+      alert(
+        'Please select a spread to begin your reading.'
       );
       return;
     }
@@ -39,8 +51,9 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          questionId: selectedQuestion,
+          questionId: effectiveQuestionId || 'custom',
           spreadId: selectedSpread,
+          customQuestion: effectiveCustomQuestion,
         }),
       });
 
@@ -81,7 +94,7 @@ export default function Home() {
     label: s.name,
   }));
 
-  const canBeginReading = selectedQuestion && selectedSpread;
+  const canBeginReading = (selectedQuestion || customQuestion.trim()) && selectedSpread;
 
   return (
     <>
@@ -111,12 +124,15 @@ export default function Home() {
 
           <div className="bg-mage-purple-800/60 rounded-2xl p-8 sm:p-10 border border-mage-gold-800/30 shadow-lg shadow-mage-purple-900/50">
             <div className="space-y-6">
-              <Select
+              <QuestionInput
                 label="What guidance do you seek?"
                 options={questionOptions}
                 value={selectedQuestion}
-                onChange={setSelectedQuestion}
+                onChangeQuestionId={setSelectedQuestion}
+                customQuestion={customQuestion}
+                onChangeCustomQuestion={setCustomQuestion}
                 placeholder="Select a question"
+                customPlaceholder="Type your question here..."
               />
 
               <Select

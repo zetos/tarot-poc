@@ -28,24 +28,42 @@ export async function POST(request: Request) {
 
     // Parse request body
     const body: AIReadingRequest = await request.json();
-    const { questionId, spreadId, cards } = body;
+    const { questionId, spreadId, cards, customQuestion } = body;
 
     // Validate required fields
-    if (!questionId || !spreadId || !cards || cards.length === 0) {
+    if (!spreadId || !cards || cards.length === 0) {
       return NextResponse.json(
         {
           error:
-            'Missing required fields: questionId, spreadId, and cards are required',
+            'Missing required fields: spreadId and cards are required',
         },
         { status: 400 }
       );
     }
 
-    // Find question and spread
-    const question = readingQuestions.find((q) => q.id === questionId);
+    // Validate that we have either a valid questionId or customQuestion
+    if (!questionId && !customQuestion) {
+      return NextResponse.json(
+        { error: 'Missing questionId or customQuestion' },
+        { status: 400 }
+      );
+    }
+
+    // Find question or create synthetic question for custom inputs
+    let question = questionId && questionId !== 'custom' 
+      ? readingQuestions.find((q) => q.id === questionId)
+      : null;
+
+    // Create synthetic question object for custom questions
+    const effectiveQuestion = question || {
+      id: 'custom',
+      label: customQuestion || 'Custom Question',
+      description: 'A personal question asked by the seeker',
+    };
+
     const spread = spreads.find((s) => s.id === spreadId);
 
-    if (!question) {
+    if (questionId && questionId !== 'custom' && !question) {
       return NextResponse.json(
         { error: 'Invalid questionId' },
         { status: 400 }
@@ -67,7 +85,7 @@ export async function POST(request: Request) {
     }
 
     // Format the reading for the AI agent
-    const prompt = formatReadingForAgent(cards, question, spread);
+    const prompt = formatReadingForAgent(cards, effectiveQuestion, spread);
 
     // Generate the interpretation using Mastra agent
     const response = await tarotReadingAgent.generate(prompt);

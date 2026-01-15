@@ -62,9 +62,13 @@ export default function ReadingPage() {
   }
 
   const spread = spreads.find((s) => s.id === reading.spreadId);
-  const question = readingQuestions.find((q) => q.id === reading.questionId);
+  const predefinedQuestion = readingQuestions.find((q) => q.id === reading.questionId);
+  const isCustomQuestion = reading.questionId === 'custom' || !predefinedQuestion;
+  const displayQuestion = isCustomQuestion
+    ? { label: reading.customQuestion || 'Custom Question', description: '' }
+    : predefinedQuestion;
 
-  if (!spread || !question) {
+  if (!spread || !displayQuestion) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-mage-purple-950">
         <p className="text-mage-gold-600">Invalid reading data</p>
@@ -107,6 +111,7 @@ export default function ReadingPage() {
           questionId: reading.questionId,
           spreadId: reading.spreadId,
           cards: reading.cards,
+          customQuestion: reading.customQuestion,
         }),
         signal: abortController.signal,
       });
@@ -140,9 +145,11 @@ export default function ReadingPage() {
             {spread.name}
           </h1>
           <p className="font-visit text-lg sm:text-xl text-mage-gold-600 mb-2">
-            {question.label}
+            {displayQuestion.label}
           </p>
-          <p className="text-sm text-mage-gold-500">{question.description}</p>
+          {displayQuestion.description && (
+            <p className="text-sm text-mage-gold-500">{displayQuestion.description}</p>
+          )}
         </div>
 
         <div className="mb-8">

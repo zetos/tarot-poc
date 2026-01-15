@@ -74,18 +74,21 @@ export type Reading = {
 export type ReadingRequest = {
   questionId: string;
   spreadId: string;
+  customQuestion?: string;
 };
 
 export type ReadingResponse = {
   questionId: string;
   spreadId: string;
   cards: DrawnCard[];
+  customQuestion?: string;
 };
 
 export type AIReadingRequest = {
   questionId: string;
   spreadId: string;
   cards: DrawnCard[];
+  customQuestion?: string;
 };
 
 export type AIReadingResponse = {
