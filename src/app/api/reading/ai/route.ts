@@ -1,4 +1,4 @@
-import { tarotReadingAgent } from '@/agents/tarotAgent';
+import { tarotReadingAgent, tarotReadingSchema } from '@/agents/tarotAgent';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import { formatReadingForAgent } from '@/lib/mastra-utils';
@@ -87,21 +87,29 @@ export async function POST(request: Request) {
     // Format the reading for the AI agent
     const prompt = formatReadingForAgent(cards, effectiveQuestion, spread);
 
-    // Generate the interpretation using Mastra agent
-    const response = await tarotReadingAgent.generate(prompt);
+    // Generate the interpretation using Mastra agent with structured output
+    const response = await tarotReadingAgent.generate(prompt, {
+      structuredOutput: {
+        schema: tarotReadingSchema,
+      },
+    });
 
     // Validate response structure
     if (
       !response ||
-      typeof response.text !== 'string' ||
-      !response.text.trim()
+      !response.object ||
+      !response.object.cardInterpretations ||
+      !response.object.overallReading ||
+      !response.object.closingAdvice
     ) {
       throw new Error('The reading could not be completed. Please try again.');
     }
 
     // Build response
     const aiResponse: AIReadingResponse = {
-      interpretation: response.text,
+      cardInterpretations: response.object.cardInterpretations,
+      overallReading: response.object.overallReading,
+      closingAdvice: response.object.closingAdvice,
       // Future: Include token usage for cost tracking
       // usage: response.usage ? {
       //   promptTokens: response.usage.promptTokens,

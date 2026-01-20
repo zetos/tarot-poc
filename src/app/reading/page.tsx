@@ -8,7 +8,7 @@ import CircularSpread7Layout from "@/components/CircularSpread7Layout";
 import { readingQuestions } from "@/data/questions";
 import { spreads } from "@/data/spreads";
 import { clearReading, getReading } from "@/lib/reading-storage";
-import type { AIReadingResponse, DrawnCard, ReadingResponse, SpreadPosition } from "@/types/tarot";
+import type { AIReadingResponse, DrawnCard, ReadingResponse, SpreadPosition, CardInterpretation } from "@/types/tarot";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
@@ -29,7 +29,11 @@ export default function ReadingPage() {
   const [reading, setReading] = useState<ReadingResponse | null>(null);
   const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<SpreadPosition | null>(null);
-  const [aiInterpretation, setAiInterpretation] = useState<string | null>(null);
+  const [aiInterpretation, setAiInterpretation] = useState<{
+    cardInterpretations: CardInterpretation[];
+    overallReading: string;
+    closingAdvice: string;
+  } | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -122,7 +126,11 @@ export default function ReadingPage() {
       }
 
       const data: AIReadingResponse = await response.json();
-      setAiInterpretation(data.interpretation);
+      setAiInterpretation({
+        cardInterpretations: data.cardInterpretations,
+        overallReading: data.overallReading,
+        closingAdvice: data.closingAdvice,
+      });
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         setAiError("The reading took too long to complete. Please try again.");
@@ -181,6 +189,7 @@ export default function ReadingPage() {
           isLoading={isLoadingAI}
           error={aiError}
           onRetry={handleGetAIReading}
+          drawnCards={reading.cards}
         />
 
         {/* Modern Action Bar - Side-by-side button layout */}

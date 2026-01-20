@@ -38,7 +38,7 @@ Cards Drawn:
           ? card.uprightMeaning
           : card.reversedMeaning;
 
-      return `Position ${position.position} - ${position.name}: ${card.name} (${
+      return `Position ${position.position} - ${position.name}: ${card.name} (ID: ${card.id}, ${
         card.orientation
       })
   Position Meaning: ${position.description}
