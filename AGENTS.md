@@ -1,11 +1,12 @@
 # Agent Guidelines for Tarot POC
 
 ## Build/Lint/Test Commands
-- **Development**: `npm run dev` (runs Next.js dev server with turbopack)
-- **Build**: `npm run build` (production build with turbopack)
-- **Start**: `npm start` (production server)
-- **Lint**: `npm run lint` (ESLint with Next.js core-web-vitals + TypeScript config)
-- **Type Check**: `npx tsc --noEmit` (no dedicated npm script)
+- **Package Manager**: `pnpm` (use `pnpm add <package>` to install packages)
+- **Development**: `pnpm dev` (runs Next.js dev server with turbopack)
+- **Build**: `pnpm build` (production build with turbopack)
+- **Start**: `pnpm start` (production server)
+- **Lint**: `pnpm lint` (ESLint with Next.js core-web-vitals + TypeScript config)
+- **Type Check**: `npx tsc --noEmit` (no dedicated pnpm script)
 - **Tests**: No test framework configured yet
 
 ## Code Style Guidelines
