@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CUSTOM_QUESTION_MAX_LENGTH } from '@/lib/validation-constants';
 
 type SelectOption = {
   value: string;
@@ -19,6 +20,20 @@ type QuestionInputProps = {
   customPlaceholder?: string;
 };
 
+const getCharCountColor = (length: number, maxLength: number): string => {
+  const ratio = length / maxLength;
+  if (ratio >= 1) return 'text-red-500';
+  if (ratio >= 0.9) return 'text-orange-500';
+  if (ratio >= 0.75) return 'text-yellow-500';
+  return 'text-mage-gold-600/60';
+};
+
+const checkOverLimit = (length: number, maxLength: number): boolean =>
+  length > maxLength;
+
+const checkShowWarning = (length: number, maxLength: number): boolean =>
+  length >= maxLength * 0.9 && !checkOverLimit(length, maxLength);
+
 export default function QuestionInput({
   label,
   options,
@@ -35,6 +50,21 @@ export default function QuestionInput({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const charCountColor = useMemo(
+    () => getCharCountColor(customQuestion.length, CUSTOM_QUESTION_MAX_LENGTH),
+    [customQuestion.length],
+  );
+
+  const overLimit = useMemo(
+    () => checkOverLimit(customQuestion.length, CUSTOM_QUESTION_MAX_LENGTH),
+    [customQuestion.length],
+  );
+
+  const showWarning = useMemo(
+    () => checkShowWarning(customQuestion.length, CUSTOM_QUESTION_MAX_LENGTH),
+    [customQuestion.length],
+  );
 
   const selectedOption = options.find((opt) => opt.value === value);
   const displayValue = selectedOption ? selectedOption.label : placeholder;
@@ -82,7 +112,7 @@ export default function QuestionInput({
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
         setHighlightedIndex((prev) =>
-          prev <= 0 ? options.length - 1 : prev - 1
+          prev <= 0 ? options.length - 1 : prev - 1,
         );
       } else if (event.key === 'Enter') {
         event.preventDefault();
@@ -192,16 +222,38 @@ export default function QuestionInput({
             onChange={(e) => onChangeCustomQuestion(e.target.value)}
             placeholder={customPlaceholder}
             rows={1}
-            className="w-full px-4 py-3 rounded-lg border border-mage-gold-600 bg-mage-purple-900/80 text-mage-gold-400 placeholder-mage-gold-600/50 transition-all focus:outline-none focus:ring-2 focus:ring-mage-gold-500/40 resize-none overflow-hidden"
+            maxLength={CUSTOM_QUESTION_MAX_LENGTH}
+            aria-describedby="char-count"
+            aria-invalid={overLimit}
+            className={`w-full pl-4 pr-12 py-3 rounded-lg border bg-mage-purple-900/80 text-mage-gold-400 placeholder-mage-gold-600/50 transition-all focus:outline-none focus:ring-2 resize-none overflow-hidden ${
+              overLimit
+                ? 'border-red-500 focus:ring-red-500/40'
+                : showWarning
+                  ? 'border-orange-500/70 focus:ring-orange-500/40'
+                  : 'border-mage-gold-600 focus:ring-mage-gold-500/40'
+            }`}
             style={{ minHeight: '52px' }}
           />
           <button
             type="button"
             onClick={handleSwitchToPreset}
             className="absolute right-3 top-3 text-xs text-mage-gold-600 hover:text-mage-gold-500 transition-colors"
+            aria-label="Clear question"
           >
             Clear
           </button>
+          <div
+            id="char-count"
+            role="status"
+            className="absolute bottom-2 right-3 text-xs transition-colors"
+            aria-live={overLimit || showWarning ? 'polite' : 'off'}
+            aria-atomic="true"
+          >
+            <span className="sr-only">Characters used: </span>
+            <span className={charCountColor}>
+              {customQuestion.length}/{CUSTOM_QUESTION_MAX_LENGTH}
+            </span>
+          </div>
         </motion.div>
       )}
 
