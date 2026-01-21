@@ -185,6 +185,8 @@ export default function AIInterpretation({
               {interpretation.cardInterpretations.map((cardInterp, index) => {
                 const drawnCard = getCardById(cardInterp.cardId);
                 const imagePath = drawnCard?.imagePath || null;
+                const displayName = drawnCard?.name ?? cardInterp.cardName;
+                const displayOrientation = drawnCard?.orientation ?? cardInterp.orientation;
 
                 return (
                   <motion.div
@@ -218,7 +220,7 @@ export default function AIInterpretation({
                         <div
                           className={`
                             absolute inset-0 rounded-lg overflow-hidden shadow-2xl
-                            ${cardInterp.orientation === "reversed" ? "rotate-180" : ""}
+                            ${displayOrientation === "reversed" ? "rotate-180" : ""}
                             bg-gradient-to-br from-mage-purple-900/90 to-mage-purple-950/90
                             border-2 border-mage-gold-700/60
                             before:absolute before:inset-0 before:rounded-lg
@@ -240,7 +242,7 @@ export default function AIInterpretation({
                           {imagePath ? (
                             <Image
                               src={imagePath}
-                              alt={cardInterp.cardName}
+                              alt={displayName}
                               fill
                               className="object-contain"
                               sizes="(max-width: 640px) 208px, (max-width: 768px) 224px, 256px"
@@ -249,10 +251,10 @@ export default function AIInterpretation({
                             <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-mage-purple-800/60">
                               <div className="text-5xl mb-3 opacity-40">🔮</div>
                               <p className="font-abbess text-sm sm:text-base font-bold text-center text-mage-gold-600 mb-2">
-                                {cardInterp.cardName}
+                                {displayName}
                               </p>
                               <p className="font-visit text-xs text-mage-gold-500 text-center capitalize">
-                                {cardInterp.orientation}
+                                {displayOrientation}
                               </p>
                             </div>
                           )}
@@ -275,10 +277,10 @@ export default function AIInterpretation({
                               ${index % 2 === 0 ? "" : "md:bg-gradient-to-l"}
                             `}
                           >
-                            {cardInterp.cardName}
+                            {displayName}
                           </h3>
                           <p className="font-visit text-base sm:text-lg text-mage-gold-500 capitalize tracking-wide">
-                            {cardInterp.orientation}
+                            {displayOrientation}
                           </p>
                         </div>
 
