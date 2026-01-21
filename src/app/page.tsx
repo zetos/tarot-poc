@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import QuestionInput from '@/components/QuestionInput';
 import Select from '@/components/Select';
 import ShuffleAnimation from '@/components/ShuffleAnimation';
+  import NoiseTexture from '@/components/Backgrounds';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import { useState } from 'react';
@@ -28,16 +29,12 @@ export default function Home() {
     const effectiveCustomQuestion = customQuestion.trim() || undefined;
 
     if (!effectiveQuestionId && !effectiveCustomQuestion) {
-      alert(
-        'Please select a question or type your own to begin your reading.'
-      );
+      alert('Please select a question or type your own to begin your reading.');
       return;
     }
 
     if (!selectedSpread) {
-      alert(
-        'Please select a spread to begin your reading.'
-      );
+      alert('Please select a spread to begin your reading.');
       return;
     }
 
@@ -94,7 +91,8 @@ export default function Home() {
     label: s.name,
   }));
 
-  const canBeginReading = (selectedQuestion || customQuestion.trim()) && selectedSpread;
+  const canBeginReading =
+    (selectedQuestion || customQuestion.trim()) && selectedSpread;
 
   return (
     <>
@@ -107,7 +105,8 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-mage-purple-950 text-mage-gold-700">
+      <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-mage-purple-950 text-mage-gold-700 relative">
+        <NoiseTexture />
         <main className="max-w-2xl w-full">
           <div className="text-center mb-12">
             <h1 className="font-abbess text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">

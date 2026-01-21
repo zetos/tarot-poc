@@ -1,8 +1,10 @@
 import Image from 'next/image';
+  import NoiseTexture from '@/components/Backgrounds';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-mage-purple-950 text-mage-gold-700">
+    <div className="min-h-screen bg-mage-purple-950 text-mage-gold-700 relative">
+      <NoiseTexture />
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="font-abbess text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">

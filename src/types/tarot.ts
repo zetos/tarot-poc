@@ -91,8 +91,19 @@ export type AIReadingRequest = {
   customQuestion?: string;
 };
 
-export type AIReadingResponse = {
+export type CardInterpretation = {
+  position: number;
+  positionName: string;
+  cardId: number;
+  cardName: string;
+  orientation: CardOrientation;
   interpretation: string;
+};
+
+export type AIReadingResponse = {
+  cardInterpretations: CardInterpretation[];
+  overallReading: string;
+  closingAdvice: string;
   usage?: {
     promptTokens: number;
     completionTokens: number;

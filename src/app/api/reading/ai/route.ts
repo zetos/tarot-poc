@@ -1,4 +1,4 @@
-import { tarotReadingAgent } from '@/agents/tarotAgent';
+import { tarotReadingAgent, tarotReadingSchema } from '@/agents/tarotAgent';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import { formatReadingForAgent } from '@/lib/mastra-utils';
@@ -87,21 +87,54 @@ export async function POST(request: Request) {
     // Format the reading for the AI agent
     const prompt = formatReadingForAgent(cards, effectiveQuestion, spread);
 
-    // Generate the interpretation using Mastra agent
-    const response = await tarotReadingAgent.generate(prompt);
+    // Generate the interpretation using Mastra agent with structured output
+    const response = await tarotReadingAgent.generate(prompt, {
+      structuredOutput: {
+        schema: tarotReadingSchema,
+      },
+    });
 
     // Validate response structure
     if (
       !response ||
-      typeof response.text !== 'string' ||
-      !response.text.trim()
+      !response.object ||
+      !response.object.cardInterpretations ||
+      !response.object.overallReading ||
+      !response.object.closingAdvice
     ) {
       throw new Error('The reading could not be completed. Please try again.');
     }
 
+    // Validate that AI's card interpretations match the actual drawn cards at each position
+    const drawnCardsByPosition = new Map(cards.map((card) => [card.position, card]));
+
+    for (const interpretation of response.object.cardInterpretations) {
+      const drawnCard = drawnCardsByPosition.get(interpretation.position);
+
+      if (!drawnCard) {
+        throw new Error(
+          `The reading returned an interpretation for position ${interpretation.position}, which was not in the drawn cards. Please try again.`
+        );
+      }
+
+      if (interpretation.cardId !== drawnCard.id) {
+        throw new Error(
+          `Card mismatch at position ${interpretation.position}. Expected ${drawnCard.name} (ID: ${drawnCard.id}), but got ${interpretation.cardName} (ID: ${interpretation.cardId}). Please try again.`
+        );
+      }
+
+      if (interpretation.orientation !== drawnCard.orientation) {
+        throw new Error(
+          `Orientation mismatch at position ${interpretation.position} for ${drawnCard.name}. Expected ${drawnCard.orientation}, but got ${interpretation.orientation}. Please try again.`
+        );
+      }
+    }
+
     // Build response
     const aiResponse: AIReadingResponse = {
-      interpretation: response.text,
+      cardInterpretations: response.object.cardInterpretations,
+      overallReading: response.object.overallReading,
+      closingAdvice: response.object.closingAdvice,
       // Future: Include token usage for cost tracking
       // usage: response.usage ? {
       //   promptTokens: response.usage.promptTokens,
