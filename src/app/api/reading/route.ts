@@ -2,6 +2,7 @@ import { allCards } from '@/data/cards';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import { drawCards } from '@/lib/tarot-utils';
+import { validateCustomQuestion } from '@/lib/validation';
 import type { ReadingRequest, ReadingResponse } from '@/types/tarot';
 import { NextResponse } from 'next/server';
 
@@ -24,7 +25,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const question = questionId && questionId !== 'custom' 
+    if (customQuestion) {
+      const validation = validateCustomQuestion(customQuestion);
+      if (!validation.success) {
+        return NextResponse.json(
+          { error: validation.errors[0].message },
+          { status: 400 }
+        );
+      }
+    }
+
+    const question = questionId && questionId !== 'custom'
       ? readingQuestions.find((q) => q.id === questionId)
       : null;
     const spread = spreads.find((s) => s.id === spreadId);
@@ -47,7 +58,7 @@ export async function POST(request: Request) {
       questionId: questionId || 'custom',
       spreadId,
       cards: drawnCards,
-      customQuestion,
+      customQuestion: customQuestion?.trim(),
     };
 
     return NextResponse.json(response);
