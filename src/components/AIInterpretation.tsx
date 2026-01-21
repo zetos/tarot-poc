@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import type { CardInterpretation, DrawnCard } from "@/types/tarot";
 import LoadingCard from "./LoadingCard";
@@ -88,7 +87,7 @@ export default function AIInterpretation({
               The answer you seek may already be within you, or you might need to ask a more specific question.
             </p>
             <p className="font-visit text-sm text-mage-gold-500 italic">
-              "The universe speaks in whispers to those who listen closely."
+              &ldquo;The universe speaks in whispers to those who listen closely.&rdquo;
             </p>
           </div>
         </div>
@@ -146,7 +145,7 @@ export default function AIInterpretation({
               </div>
               <div className="relative text-center space-y-3">
                 <h2 className="font-abbess text-3xl sm:text-4xl font-bold text-mage-gold-700">
-                  Granny's Interpretation
+                  Granny&rsquo;s Interpretation
                 </h2>
                 <div className="flex items-center justify-center gap-4">
                   <div className="w-16 h-px bg-mage-gold-700/40"></div>
@@ -329,7 +328,7 @@ export default function AIInterpretation({
               </div>
               <div className="relative text-center space-y-3">
                 <h2 className="font-abbess text-3xl sm:text-4xl font-bold text-mage-gold-700">
-                  Granny's Wisdom
+                  Granny&rsquo;s Wisdom
                 </h2>
                 <div className="flex items-center justify-center gap-4">
                   <div className="w-16 h-px bg-mage-gold-700/40"></div>

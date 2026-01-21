@@ -10,13 +10,6 @@ type ShuffleAnimationProps = {
   duration?: number;
 };
 
-type CardPhase =
-  | 'split'
-  | 'shuffle-1'
-  | 'shuffle-2'
-  | 'shuffle-3'
-  | 'consolidate';
-
 export default function ShuffleAnimation({
   cardCount,
   onCompleteAction,

@@ -46,7 +46,6 @@ export default function QuestionInput({
 }: QuestionInputProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const [isCustomMode, setIsCustomMode] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -68,12 +67,7 @@ export default function QuestionInput({
 
   const selectedOption = options.find((opt) => opt.value === value);
   const displayValue = selectedOption ? selectedOption.label : placeholder;
-
-  useEffect(() => {
-    if (customQuestion.trim().length > 0) {
-      setIsCustomMode(true);
-    }
-  }, [customQuestion]);
+  const isCustomMode = customQuestion.trim().length > 0;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -136,13 +130,11 @@ export default function QuestionInput({
   };
 
   const handleSwitchToCustom = () => {
-    setIsCustomMode(true);
     setTimeout(() => textareaRef.current?.focus(), 50);
   };
 
   const handleSwitchToPreset = () => {
     onChangeCustomQuestion('');
-    setIsCustomMode(false);
   };
 
   return (

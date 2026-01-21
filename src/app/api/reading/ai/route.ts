@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     }
 
     // Find question or create synthetic question for custom inputs
-    let question = questionId && questionId !== 'custom' 
+    const question = questionId && questionId !== 'custom' 
       ? readingQuestions.find((q) => q.id === questionId)
       : null;
 
