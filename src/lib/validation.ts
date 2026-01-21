@@ -65,8 +65,3 @@ export const validateCustomQuestion = (
 
   return { success: true, data: trimmedQuestion };
 };
-
-export const createErrorResponse = (
-  message: string,
-  status: number = 400
-): { error: string; status: number } => ({ error: message, status });
