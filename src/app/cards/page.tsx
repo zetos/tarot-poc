@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { NoiseTexture } from '@/components/Backgrounds';
+import NoiseTexture from '@/components/Backgrounds';
 import {
   motion,
   AnimatePresence,
@@ -241,7 +241,7 @@ export default function Cards() {
   };
 
   return (
-    <div className="min-h-screen bg-mage-purple-950 text-mage-gold-700">
+    <div className="relative min-h-screen bg-mage-purple-950 text-mage-gold-700">
       <NoiseTexture />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <motion.div

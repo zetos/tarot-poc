@@ -126,9 +126,7 @@ export default function AIInterpretation({
 
   const getCardById = (cardId: number) => {
     if (!drawnCards) return null;
-    console.log(`Looking for card ID: ${cardId} in ${drawnCards.length} cards`);
     const foundCard = drawnCards.find((dc) => dc.id === cardId);
-    console.log(`Card ID ${cardId} found:`, !!foundCard);
     return foundCard || null;
   };
 
@@ -299,8 +297,7 @@ export default function AIInterpretation({
                       </div>
                     </div>
 
-                    {cardInterp.position <
-                      interpretation.cardInterpretations.length && (
+                    {index < interpretation.cardInterpretations.length - 1 && (
                       <motion.div
                         className="flex items-center justify-center gap-4 py-4 opacity-60"
                         initial={{ opacity: 0 }}

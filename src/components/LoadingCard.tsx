@@ -2,18 +2,19 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+
+const stages = [
+  'Consulting the cards...',
+  'Granny is gathering her thoughts...',
+  'The spirits are whispering...',
+  'Weaving threads of fate...',
+];
 
 export default function LoadingCard() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [stageIndex, setStageIndex] = useState(0);
-
-  const stages = [
-    'Consulting the cards...',
-    'Granny is gathering her thoughts...',
-    'The spirits are whispering...',
-    'Weaving threads of fate...',
-  ];
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const timeInterval = setInterval(() => {
@@ -47,7 +48,7 @@ export default function LoadingCard() {
       <div className="flex flex-col items-center space-y-8">
         <motion.div
           className="relative w-48 sm:w-56 aspect-[3/5]"
-          animate={{
+          animate={shouldReduceMotion ? undefined : {
             y: [0, -8, 0],
           }}
           transition={{
@@ -64,7 +65,7 @@ export default function LoadingCard() {
             }}
           >
             <motion.div
-              animate={{
+              animate={shouldReduceMotion ? undefined : {
                 boxShadow: [
                   'inset 0 0 20px rgba(212, 175, 55, 0.3)',
                   'inset 0 0 40px rgba(212, 175, 55, 0.5)',
@@ -78,21 +79,21 @@ export default function LoadingCard() {
               }}
               className="absolute inset-0 rounded-lg border-2 border-mage-gold-700/60 bg-mage-purple-900/80"
             >
-              <motion.div
-                animate={{
-                  borderColor: [
-                    'rgba(212, 175, 55, 0.4)',
-                    'rgba(212, 175, 55, 0.7)',
-                    'rgba(212, 175, 55, 0.4)',
-                  ],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                className="absolute inset-0 rounded-lg border border-mage-gold-700/20"
-              >
+                <motion.div
+                  animate={shouldReduceMotion ? undefined : {
+                    borderColor: [
+                      'rgba(212, 175, 55, 0.4)',
+                      'rgba(212, 175, 55, 0.7)',
+                      'rgba(212, 175, 55, 0.4)',
+                    ],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                  className="absolute inset-0 rounded-lg border border-mage-gold-700/20"
+                >
                 <Image
                   src="/assets/mage/tarotcardback.png"
                   alt="Tarot card back"
@@ -107,7 +108,7 @@ export default function LoadingCard() {
 
         <motion.div
           className="text-center space-y-4"
-          animate={{
+          animate={shouldReduceMotion ? undefined : {
             opacity: [0.7, 1, 0.7],
           }}
           transition={{
@@ -119,9 +120,9 @@ export default function LoadingCard() {
           <motion.p
             key={stageIndex}
             className="font-visit text-lg sm:text-xl text-mage-gold-600"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 10 }}
+            animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0, y: -10 }}
             transition={{ duration: 0.5 }}
           >
             ✧ {stages[stageIndex]} ✧
@@ -137,7 +138,7 @@ export default function LoadingCard() {
 
         <motion.div
           className="w-full max-w-md h-px bg-gradient-to-r from-transparent via-mage-gold-600/40 to-transparent"
-          animate={{
+          animate={shouldReduceMotion ? undefined : {
             opacity: [0.3, 0.6, 0.3],
           }}
           transition={{

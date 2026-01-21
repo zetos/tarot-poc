@@ -17,7 +17,7 @@ import type {
 } from '@/types/tarot';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { NoiseTexture } from '@/components/Backgrounds';
+import NoiseTexture from '@/components/Backgrounds';
 
 /**
  * Render the reading page UI for a stored tarot reading, showing the selected spread, question,
@@ -160,7 +160,7 @@ export default function ReadingPage() {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-8 bg-mage-purple-950 text-mage-gold-700 relative">
+    <div className="min-h-screen pt-20 px-4 sm:px-8 bg-mage-purple-950 text-mage-gold-700 relative">
       <NoiseTexture />
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8 sm:mb-12">

@@ -5,7 +5,7 @@ type NoiseTextureProps = {
   className?: string;
 };
 
-export function NoiseTexture({
+export default function NoiseTexture({
   opacity = 0.03,
   className = '',
 }: NoiseTextureProps) {

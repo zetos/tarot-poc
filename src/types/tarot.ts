@@ -96,7 +96,7 @@ export type CardInterpretation = {
   positionName: string;
   cardId: number;
   cardName: string;
-  orientation: 'upright' | 'reversed';
+  orientation: CardOrientation;
   interpretation: string;
 };
 

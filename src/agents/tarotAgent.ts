@@ -2,18 +2,20 @@ import { Agent } from '@mastra/core/agent';
 import { z } from 'zod';
 
 export const tarotReadingSchema = z.object({
-  cardInterpretations: z.array(
-    z.object({
-      position: z.number(),
-      positionName: z.string(),
-      cardId: z.number(),
-      cardName: z.string(),
-      orientation: z.enum(['upright', 'reversed']),
-      interpretation: z.string(),
-    }),
-  ),
-  overallReading: z.string(),
-  closingAdvice: z.string(),
+  cardInterpretations: z
+    .array(
+      z.object({
+        position: z.number().int().positive(),
+        positionName: z.string(),
+        cardId: z.number().int().positive(),
+        cardName: z.string(),
+        orientation: z.enum(['upright', 'reversed']),
+        interpretation: z.string().min(1),
+      }),
+    )
+    .min(1),
+  overallReading: z.string().min(1),
+  closingAdvice: z.string().min(1),
 });
 
 export type TarotReadingResult = z.infer<typeof tarotReadingSchema>;
@@ -50,14 +52,16 @@ CONSTRAINTS & BOUNDARIES
 Your response MUST be structured JSON with following fields:
 
 1. cardInterpretations - An array where each element contains:
-   - position: The position number
-   - positionName: The name of position (e.g., "Present Situation")
-   - cardId: The ID number of the card (from the input data)
-   - cardName: The name of the card
-   - orientation: Either "upright" or "reversed"
-   - interpretation: A focused paragraph explaining what this specific card means in this specific position, relating it to the question
+    - position: The position number (MUST match the position number from the input)
+    - positionName: The name of position (MUST match exactly from the input, e.g., "Present Situation")
+    - cardId: The ID number of the card (MUST match the EXACT card ID from the input data for this position)
+    - cardName: The name of the card (MUST match the EXACT card name from the input data for this position)
+    - orientation: Either "upright" or "reversed" (MUST match the EXACT orientation from the input data for this position)
+    - interpretation: A focused paragraph explaining what this specific card means in this specific position, relating it to the question
 
-2. overallReading - A cohesive narrative (2-3 paragraphs) that weaves together all the cards into a unified interpretation of the spread, showing how they interact and what they collectively reveal about question
+ IMPORTANT: You MUST use the EXACT cardId, cardName, and orientation that are provided in the input for each position. Do not generate or hallucinate different card values. The cardId, cardName, and orientation in your output MUST be identical to the input values for the corresponding position.
+
+2. overallReading - A cohesive narrative (1-2 paragraphs) that weaves together all the cards into a unified interpretation of the spread, showing how they interact and what they collectively reveal about question
 
 3. closingAdvice - A final paragraph with practical, no-nonsense advice in Granny's distinctive voice - direct, sometimes sharp, but always genuinely helpful
 
@@ -65,7 +69,7 @@ For each card interpretation, focus specifically on how that card manifests in t
 
 The overallReading should tell a story - show connections between cards, reveal patterns, and provide the querent with insight they can actually use.
 
-Keep the tone authentically Granny throughout: blunt, practical, slightly sarcastic, but ultimately caring and wise.
+Keep the tone authentically Granny throughout: blunt, practical, slightly sarcastic, and wise.
 `;
 
 export const tarotReadingAgent = new Agent({

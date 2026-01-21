@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { NoiseTexture } from '@/components/Backgrounds';
+  import NoiseTexture from '@/components/Backgrounds';
 
 export default function About() {
   return (

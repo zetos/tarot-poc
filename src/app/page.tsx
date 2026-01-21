@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import QuestionInput from '@/components/QuestionInput';
 import Select from '@/components/Select';
 import ShuffleAnimation from '@/components/ShuffleAnimation';
-import { NoiseTexture } from '@/components/Backgrounds';
+  import NoiseTexture from '@/components/Backgrounds';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import { useState } from 'react';

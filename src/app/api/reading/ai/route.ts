@@ -105,6 +105,31 @@ export async function POST(request: Request) {
       throw new Error('The reading could not be completed. Please try again.');
     }
 
+    // Validate that AI's card interpretations match the actual drawn cards at each position
+    const drawnCardsByPosition = new Map(cards.map((card) => [card.position, card]));
+
+    for (const interpretation of response.object.cardInterpretations) {
+      const drawnCard = drawnCardsByPosition.get(interpretation.position);
+
+      if (!drawnCard) {
+        throw new Error(
+          `The reading returned an interpretation for position ${interpretation.position}, which was not in the drawn cards. Please try again.`
+        );
+      }
+
+      if (interpretation.cardId !== drawnCard.id) {
+        throw new Error(
+          `Card mismatch at position ${interpretation.position}. Expected ${drawnCard.name} (ID: ${drawnCard.id}), but got ${interpretation.cardName} (ID: ${interpretation.cardId}). Please try again.`
+        );
+      }
+
+      if (interpretation.orientation !== drawnCard.orientation) {
+        throw new Error(
+          `Orientation mismatch at position ${interpretation.position} for ${drawnCard.name}. Expected ${drawnCard.orientation}, but got ${interpretation.orientation}. Please try again.`
+        );
+      }
+    }
+
     // Build response
     const aiResponse: AIReadingResponse = {
       cardInterpretations: response.object.cardInterpretations,
