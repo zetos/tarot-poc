@@ -1,6 +1,8 @@
 import {
   VALIDATION_CONSTANTS,
   CUSTOM_QUESTION_MAX_LENGTH,
+  type ValidationErrorCode,
+  type ValidationFieldName,
 } from './validation-constants';
 
 export type ValidationResult<T> =
@@ -8,16 +10,25 @@ export type ValidationResult<T> =
   | { success: false; errors: readonly ValidationError[] };
 
 export type ValidationError = {
-  field: string;
+  field: ValidationFieldName;
   message: string;
-  code: string;
+  code: ValidationErrorCode;
 };
 
 export const validateCustomQuestion = (
   question: string | undefined
-): ValidationResult<string | undefined> => {
-  if (!question || question === '') {
-    return { success: true, data: undefined };
+): ValidationResult<string> => {
+  if (!question) {
+    return {
+      success: false,
+      errors: [
+        {
+          field: VALIDATION_CONSTANTS.CUSTOM_QUESTION.FIELD_NAME,
+          message: VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_MESSAGES.REQUIRED,
+          code: VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_CODES.REQUIRED,
+        },
+      ],
+    };
   }
 
   const trimmedQuestion = question.trim();
@@ -27,9 +38,10 @@ export const validateCustomQuestion = (
       success: false,
       errors: [
         {
-          field: 'customQuestion',
-          message: VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_MESSAGES.TOO_SHORT,
-          code: 'TOO_SHORT',
+          field: VALIDATION_CONSTANTS.CUSTOM_QUESTION.FIELD_NAME,
+          message:
+            VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_MESSAGES.TOO_SHORT,
+          code: VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_CODES.TOO_SHORT,
         },
       ],
     };
@@ -40,12 +52,12 @@ export const validateCustomQuestion = (
       success: false,
       errors: [
         {
-          field: 'customQuestion',
+          field: VALIDATION_CONSTANTS.CUSTOM_QUESTION.FIELD_NAME,
           message:
             VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_MESSAGES.TOO_LONG(
               CUSTOM_QUESTION_MAX_LENGTH
             ),
-          code: 'TOO_LONG',
+          code: VALIDATION_CONSTANTS.CUSTOM_QUESTION.ERROR_CODES.TOO_LONG,
         },
       ],
     };
@@ -53,3 +65,8 @@ export const validateCustomQuestion = (
 
   return { success: true, data: trimmedQuestion };
 };
+
+export const createErrorResponse = (
+  message: string,
+  status: number = 400
+): { error: string; status: number } => ({ error: message, status });
