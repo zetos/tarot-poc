@@ -7,7 +7,7 @@ export const tarotReadingSchema = z.object({
       z.object({
         position: z.number().int().positive(),
         positionName: z.string(),
-        cardId: z.number().int().positive(),
+        cardId: z.number().int().nonnegative(),
         cardName: z.string(),
         orientation: z.enum(['upright', 'reversed']),
         interpretation: z.string().min(1),
