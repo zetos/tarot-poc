@@ -73,6 +73,7 @@ Keep the tone authentically Granny throughout: blunt, practical, slightly sarcas
 `;
 
 export const tarotReadingAgent = new Agent({
+  id: 'tarot-reading-agent',
   name: 'Tarot Reading Agent',
   instructions: instructions,
   model: 'openai/gpt-5-mini',
