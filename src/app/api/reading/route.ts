@@ -11,6 +11,13 @@ export async function POST(request: Request) {
     const body: ReadingRequest = await request.json();
     const { questionId, spreadId, customQuestion } = body;
 
+    if (customQuestion !== undefined && typeof customQuestion !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid customQuestion' },
+        { status: 400 },
+      );
+    }
+
     if ((!questionId || questionId === 'custom') && !customQuestion) {
       return NextResponse.json(
         { error: 'Missing questionId or customQuestion' },
@@ -28,7 +35,7 @@ export async function POST(request: Request) {
       const validation = validateCustomQuestion(customQuestion);
       if (!validation.success) {
         return NextResponse.json(
-          { error: validation.errors[0].message },
+          { error: validation.error },
           { status: 400 },
         );
       }

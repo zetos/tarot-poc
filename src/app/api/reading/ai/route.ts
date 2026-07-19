@@ -1,63 +1,71 @@
 import { tarotReadingAgent, tarotReadingSchema } from '@/agents/tarotAgent';
+import { allCards } from '@/data/cards';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
 import { formatReadingForAgent } from '@/lib/mastra-utils';
-import type { AIReadingRequest, AIReadingResponse } from '@/types/tarot';
+import { validateCustomQuestion } from '@/lib/validation';
+import type { AIReadingRequest } from '@/types/tarot';
 import { NextResponse } from 'next/server';
 
-/**
- * Handle POST requests to generate an AI tarot reading interpretation.
- *
- * Validates the request body (expects `questionId`, `spreadId`, and `cards`), ensures the chosen question and spread exist and the card count matches the spread, formats a prompt for the tarot agent, and returns the agent's interpretation or a JSON error with an appropriate HTTP status.
- *
- * @param request - Incoming HTTP request whose JSON body must conform to `AIReadingRequest` (contains `questionId`, `spreadId`, and `cards`).
- * @returns A NextResponse containing `AIReadingResponse` with `{ interpretation: string }` on success, or a JSON error object `{ error: string }` with an appropriate HTTP status on failure.
- */
 export async function POST(request: Request) {
   try {
-    // Check for API key
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
         {
           error:
             'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.',
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    // Parse request body
     const body: AIReadingRequest = await request.json();
     const { questionId, spreadId, cards, customQuestion } = body;
 
-    // Validate required fields
-    if (!spreadId || !cards || cards.length === 0) {
+    if (!spreadId || !Array.isArray(cards) || cards.length === 0) {
       return NextResponse.json(
         {
           error:
             'Missing required fields: spreadId and cards are required',
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Validate that we have either a valid questionId or customQuestion
-    if (!questionId && !customQuestion) {
+    if (customQuestion !== undefined && typeof customQuestion !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid customQuestion' },
+        { status: 400 },
+      );
+    }
+
+    let validatedCustomQuestion: string | undefined;
+    if (!questionId || questionId === 'custom') {
+      const validation = validateCustomQuestion(customQuestion);
+      if (!validation.success) {
+        return NextResponse.json(
+          { error: validation.error },
+          { status: 400 },
+        );
+      }
+      validatedCustomQuestion = validation.data;
+    }
+
+    if (!questionId && !validatedCustomQuestion) {
       return NextResponse.json(
         { error: 'Missing questionId or customQuestion' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Find question or create synthetic question for custom inputs
-    const question = questionId && questionId !== 'custom' 
-      ? readingQuestions.find((q) => q.id === questionId)
-      : null;
+    const question =
+      questionId && questionId !== 'custom'
+        ? readingQuestions.find((item) => item.id === questionId)
+        : null;
 
-    // Create synthetic question object for custom questions
     const effectiveQuestion = question || {
       id: 'custom',
-      label: customQuestion || 'Custom Question',
+      label: validatedCustomQuestion || 'Custom Question',
       description: 'A personal question asked by the seeker',
     };
 
@@ -66,7 +74,7 @@ export async function POST(request: Request) {
     if (questionId && questionId !== 'custom' && !question) {
       return NextResponse.json(
         { error: 'Invalid questionId' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -74,80 +82,100 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid spreadId' }, { status: 400 });
     }
 
-    // Validate card count matches spread positions
     if (cards.length !== spread.positions.length) {
       return NextResponse.json(
         {
           error: `Card count (${cards.length}) does not match spread positions (${spread.positions.length})`,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Format the reading for the AI agent
-    const prompt = formatReadingForAgent(cards, effectiveQuestion, spread);
+    const validCards = cards.every(
+      (card) =>
+        card &&
+        typeof card.id === 'number' &&
+        Number.isInteger(card.position) &&
+        (card.orientation === 'upright' || card.orientation === 'reversed'),
+    );
 
-    // Generate the interpretation using Mastra agent with structured output
+    if (!validCards) {
+      return NextResponse.json({ error: 'Invalid cards' }, { status: 400 });
+    }
+
+    const positions = new Set(cards.map((card) => card.position));
+    const cardIds = new Set(cards.map((card) => card.id));
+
+    if (
+      positions.size !== cards.length ||
+      cardIds.size !== cards.length ||
+      cards.some(
+        (card) => card.position < 1 || card.position > spread.positions.length,
+      )
+    ) {
+      return NextResponse.json({ error: 'Invalid cards' }, { status: 400 });
+    }
+
+    const canonicalCards = cards
+      .map((drawnCard) => {
+        const card = allCards.find(({ id }) => id === drawnCard.id);
+        return card
+          ? {
+              ...card,
+              orientation: drawnCard.orientation,
+              position: drawnCard.position,
+            }
+          : null;
+      })
+      .sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0));
+
+    if (canonicalCards.some((card) => !card)) {
+      return NextResponse.json({ error: 'Invalid cards' }, { status: 400 });
+    }
+
+    const verifiedCards = canonicalCards.filter((card) => card !== null);
+    const prompt = formatReadingForAgent(
+      verifiedCards,
+      effectiveQuestion,
+      spread,
+    );
+
     const response = await tarotReadingAgent.generate(prompt, {
       structuredOutput: {
         schema: tarotReadingSchema,
       },
     });
 
-    // Validate response structure
-    if (
-      !response ||
-      !response.object ||
-      !response.object.cardInterpretations ||
-      !response.object.overallReading ||
-      !response.object.closingAdvice
-    ) {
-      throw new Error('The reading could not be completed. Please try again.');
-    }
-
-    // Validate that AI's card interpretations match the actual drawn cards at each position
-    const drawnCardsByPosition = new Map(cards.map((card) => [card.position, card]));
+    const drawnCardsByPosition = new Map(
+      verifiedCards.map((card) => [card.position, card]),
+    );
 
     for (const interpretation of response.object.cardInterpretations) {
       const drawnCard = drawnCardsByPosition.get(interpretation.position);
 
       if (!drawnCard) {
         throw new Error(
-          `The reading returned an interpretation for position ${interpretation.position}, which was not in the drawn cards. Please try again.`
+          `The reading returned an interpretation for position ${interpretation.position}, which was not in the drawn cards. Please try again.`,
         );
       }
 
       if (interpretation.cardId !== drawnCard.id) {
         throw new Error(
-          `Card mismatch at position ${interpretation.position}. Expected ${drawnCard.name} (ID: ${drawnCard.id}), but got ${interpretation.cardName} (ID: ${interpretation.cardId}). Please try again.`
+          `Card mismatch at position ${interpretation.position}. Expected ${drawnCard.name} (ID: ${drawnCard.id}), but got ${interpretation.cardName} (ID: ${interpretation.cardId}). Please try again.`,
         );
       }
 
       if (interpretation.orientation !== drawnCard.orientation) {
         throw new Error(
-          `Orientation mismatch at position ${interpretation.position} for ${drawnCard.name}. Expected ${drawnCard.orientation}, but got ${interpretation.orientation}. Please try again.`
+          `Orientation mismatch at position ${interpretation.position} for ${drawnCard.name}. Expected ${drawnCard.orientation}, but got ${interpretation.orientation}. Please try again.`,
         );
       }
     }
 
-    // Build response
-    const aiResponse: AIReadingResponse = {
-      cardInterpretations: response.object.cardInterpretations,
-      overallReading: response.object.overallReading,
-      closingAdvice: response.object.closingAdvice,
-      // Future: Include token usage for cost tracking
-      // usage: response.usage ? {
-      //   promptTokens: response.usage.promptTokens,
-      //   completionTokens: response.usage.completionTokens,
-      //   totalTokens: response.usage.totalTokens,
-      // } : undefined,
-    };
-
-    return NextResponse.json(aiResponse);
+    return NextResponse.json(response.object);
   } catch (error) {
     console.error('Error in AI reading API:', error);
 
-    // Provide helpful error message
     const errorMessage =
       error instanceof Error
         ? error.message
@@ -155,7 +183,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { error: `Granny couldn't complete the reading. ${errorMessage}` },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

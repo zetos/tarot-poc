@@ -4,8 +4,6 @@ export type Suit =
       faction: 'traditions';
       element: 'fire';
       tarotSuit: 'wands';
-      // virtues: ['Creativity', 'Energy', 'Diversity'];
-      // vices: ['Restlessness', 'Pride', 'Obstinance'];
     }
   | {
       essence: 'primordialism';
@@ -64,13 +62,6 @@ export type DrawnCard = TarotCard & {
   position: number;
 };
 
-export type Reading = {
-  question: ReadingQuestion;
-  spread: Spread;
-  cards: TarotCard[];
-  createdAt: Date;
-};
-
 export type ReadingRequest = {
   questionId: string;
   spreadId: string;
@@ -104,10 +95,4 @@ export type AIReadingResponse = {
   cardInterpretations: CardInterpretation[];
   overallReading: string;
   closingAdvice: string;
-  usage?: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
-  error?: string;
 };

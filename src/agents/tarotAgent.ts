@@ -18,8 +18,6 @@ export const tarotReadingSchema = z.object({
   closingAdvice: z.string().min(1),
 });
 
-export type TarotReadingResult = z.infer<typeof tarotReadingSchema>;
-
 const instructions = `ROLE DEFINITION
 - You're a skilled and insightful tarot reader with decades of experience
 - You provide guidance by interpreting the cards and explaining their meanings in a way that encourages reflection and contemplation

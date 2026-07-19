@@ -14,17 +14,11 @@ export function getRandomOrientation(): CardOrientation {
 }
 
 export function drawCards(deck: TarotCard[], count: number): DrawnCard[] {
-  const shuffled = shuffleDeck(deck);
-  const drawn: DrawnCard[] = [];
-
-  for (let i = 0; i < count; i++) {
-    const card = shuffled[i];
-    drawn.push({
+  return shuffleDeck(deck)
+    .slice(0, count)
+    .map((card, index) => ({
       ...card,
       orientation: getRandomOrientation(),
-      position: i + 1,
-    });
-  }
-
-  return drawn;
+      position: index + 1,
+    }));
 }

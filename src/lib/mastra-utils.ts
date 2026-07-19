@@ -12,13 +12,6 @@ export function formatReadingForAgent(
   question: ReadingQuestion,
   spread: Spread
 ): string {
-  // Validate card count matches spread positions
-  if (cards.length !== spread.positions.length) {
-    throw new Error(
-      `The cards don't match the chosen spread. Expected ${spread.positions.length} cards but received ${cards.length}.`
-    );
-  }
-
   const isCustomQuestion = question.id === 'custom';
 
   const header = `Question: ${question.label}
