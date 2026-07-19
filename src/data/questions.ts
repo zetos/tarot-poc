@@ -1,22 +1,28 @@
-import type { ReadingQuestion } from "@/types/tarot";
+import type { ReadingQuestion } from '@/types/tarot';
 
 export const readingQuestions: ReadingQuestion[] = [
   {
-    id: "work",
-    label: "Work & Career",
+    id: 'work',
+    label: 'Work & Career',
     description:
-      "Guidance on professional matters, career paths, and workplace dynamics",
+      'Guidance on professional matters, career paths, and workplace dynamics',
   },
   {
-    id: "love",
-    label: "Love & Relationships",
+    id: 'love',
+    label: 'Love & Relationships',
     description:
-      "Insights into romantic relationships, partnerships, and emotional connections",
+      'Insights into romantic relationships, partnerships, and emotional connections',
   },
   {
-    id: "future",
-    label: "Future & Destiny",
+    id: 'future',
+    label: 'Future & Destiny',
     description:
-      "Explore upcoming opportunities, challenges, and your life path ahead",
+      'Explore upcoming opportunities, challenges, and your life path ahead',
+  },
+  {
+    id: 'now',
+    label: 'What should i know right now?',
+    description:
+      'Receive guidance on the most important themes, insights, and actions for this moment',
   },
 ];
