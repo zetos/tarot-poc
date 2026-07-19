@@ -1,6 +1,6 @@
 import type { Spread } from "@/types/tarot";
 
-export const celticCross: Spread = {
+const celticCross: Spread = {
   id: "celtic-cross",
   name: "The Celtic Cross",
   description:
@@ -64,7 +64,7 @@ export const celticCross: Spread = {
   ],
 };
 
-export const circular7Weekly: Spread = {
+const circular7Weekly: Spread = {
   id: "circular-7-weekly",
   name: "The Circular Spread (Weekly)",
   description:
@@ -110,7 +110,7 @@ export const circular7Weekly: Spread = {
   ],
 };
 
-export const circular12Yearly: Spread = {
+const circular12Yearly: Spread = {
   id: "circular-12-yearly",
   name: "The Circular Spread (Yearly)",
   description:

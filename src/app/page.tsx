@@ -2,27 +2,34 @@
 
 import { useRouter } from 'next/navigation';
 import { AnimatePresence } from 'framer-motion';
+import { useRef, useState } from 'react';
+
 import QuestionInput from '@/components/QuestionInput';
 import Select from '@/components/Select';
 import ShuffleAnimation from '@/components/ShuffleAnimation';
-  import NoiseTexture from '@/components/Backgrounds';
 import { readingQuestions } from '@/data/questions';
 import { spreads } from '@/data/spreads';
-import { useState } from 'react';
 import { saveReading } from '@/lib/reading-storage';
 import type { ReadingResponse } from '@/types/tarot';
+
+const questionOptions = readingQuestions.map(({ id, label }) => ({
+  value: id,
+  label,
+}));
+const spreadOptions = spreads.map(({ id, name }) => ({
+  value: id,
+  label: name,
+}));
 
 export default function Home() {
   const router = useRouter();
   const [selectedQuestion, setSelectedQuestion] = useState('');
   const [customQuestion, setCustomQuestion] = useState('');
   const [selectedSpread, setSelectedSpread] = useState('');
-  const [selectedSpreadData, setSelectedSpreadData] = useState<
-    (typeof spreads)[0] | null
-  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showShuffle, setShowShuffle] = useState(false);
-  const [readingData, setReadingData] = useState<ReadingResponse | null>(null);
+  const shuffleCompleteRef = useRef<(() => void) | null>(null);
+  const selectedSpreadData = spreads.find(({ id }) => id === selectedSpread);
 
   const handleBeginReading = async () => {
     const effectiveQuestionId = customQuestion.trim() ? '' : selectedQuestion;
@@ -40,6 +47,9 @@ export default function Home() {
 
     setIsLoading(true);
     setShowShuffle(true);
+    const shuffleComplete = new Promise<void>((resolve) => {
+      shuffleCompleteRef.current = resolve;
+    });
 
     try {
       const response = await fetch('/api/reading', {
@@ -56,43 +66,30 @@ export default function Home() {
 
       if (!response.ok) {
         const error = await response.json();
-        console.error('API Error:', error);
-        setShowShuffle(false);
-        setIsLoading(false);
-        alert(`Error: ${error.error || 'Failed to create reading'}`);
-        return;
+        throw new Error(error.error || 'Failed to create reading');
       }
 
       const data: ReadingResponse = await response.json();
-      console.log('Reading Result:', data);
-      setReadingData(data);
+      await shuffleComplete;
+      saveReading(data);
+      router.push('/reading');
     } catch (error) {
       console.error('Failed to create reading:', error);
       setShowShuffle(false);
       setIsLoading(false);
-      alert('An error occurred while creating your reading. Please try again.');
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'An error occurred while creating your reading. Please try again.',
+      );
+    } finally {
+      shuffleCompleteRef.current = null;
     }
   };
 
-  const handleShuffleComplete = () => {
-    if (readingData) {
-      saveReading(readingData);
-      router.push('/reading');
-    }
-  };
-
-  const questionOptions = readingQuestions.map((q) => ({
-    value: q.id,
-    label: q.label,
-  }));
-
-  const spreadOptions = spreads.map((s) => ({
-    value: s.id,
-    label: s.name,
-  }));
-
-  const canBeginReading =
-    (selectedQuestion || customQuestion.trim()) && selectedSpread;
+  const canBeginReading = Boolean(
+    (selectedQuestion || customQuestion.trim()) && selectedSpread,
+  );
 
   return (
     <>
@@ -100,13 +97,12 @@ export default function Home() {
         {showShuffle && (
           <ShuffleAnimation
             cardCount={selectedSpreadData?.positions.length || 10}
-            onCompleteAction={handleShuffleComplete}
+            onCompleteAction={() => shuffleCompleteRef.current?.()}
           />
         )}
       </AnimatePresence>
 
       <div className="font-sans min-h-screen flex items-center justify-center p-8 bg-mage-purple-950 text-mage-gold-700 relative">
-        <NoiseTexture />
         <main className="max-w-2xl w-full">
           <div className="text-center mb-12">
             <h1 className="font-abbess text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">
@@ -138,18 +134,14 @@ export default function Home() {
                 label="Choose your reading spread"
                 options={spreadOptions}
                 value={selectedSpread}
-                onChange={(value) => {
-                  setSelectedSpread(value);
-                  const spread = spreads.find((s) => s.id === value);
-                  setSelectedSpreadData(spread || null);
-                }}
+                onChange={setSelectedSpread}
                 placeholder="Select a spread"
               />
 
               {selectedSpread && (
                 <div className="mt-4 p-4 rounded-lg bg-mage-purple-900/40 border border-mage-gold-800/20">
                   <p className="text-sm text-mage-gold-500">
-                    {spreads.find((s) => s.id === selectedSpread)?.description}
+                    {selectedSpreadData?.description}
                   </p>
                 </div>
               )}

@@ -1,16 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import type { CardInterpretation, DrawnCard } from "@/types/tarot";
+import { motion, useReducedMotion } from "framer-motion";
+import type { AIReadingResponse, DrawnCard } from "@/types/tarot";
 import LoadingCard from "./LoadingCard";
 
 type AIInterpretationProps = {
-  interpretation: {
-    cardInterpretations: CardInterpretation[];
-    overallReading: string;
-    closingAdvice: string;
-  } | null;
+  interpretation: AIReadingResponse | null;
   isLoading: boolean;
   error: string | null;
   onRetry: () => void;
@@ -62,39 +58,6 @@ export default function AIInterpretation({
 
   if (!interpretation) return null;
 
-  const hasContent =
-    (interpretation.overallReading?.trim() || '').length > 0 ||
-    (interpretation.closingAdvice?.trim() || '').length > 0 ||
-    interpretation.cardInterpretations.some(ci => ci.interpretation?.trim());
-
-  if (!hasContent) {
-    return (
-      <motion.div
-        className="mt-8 p-8 bg-mage-purple-800/60 rounded-2xl border border-mage-gold-800/30 shadow-lg"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="text-center space-y-6">
-          <h2 className="font-abbess text-2xl sm:text-3xl font-bold text-mage-gold-700">
-            The Cards Are Silent
-          </h2>
-          <div className="max-w-2xl mx-auto">
-            <p className="font-visit text-base sm:text-lg text-mage-gold-600 leading-relaxed mb-4">
-              Sometimes the cards have nothing to say.
-            </p>
-            <p className="font-visit text-base sm:text-lg text-mage-gold-600 leading-relaxed mb-4">
-              The answer you seek may already be within you, or you might need to ask a more specific question.
-            </p>
-            <p className="font-visit text-sm text-mage-gold-500 italic">
-              &ldquo;The universe speaks in whispers to those who listen closely.&rdquo;
-            </p>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -121,12 +84,6 @@ export default function AIInterpretation({
         ease: "easeOut" as const,
       },
     },
-  };
-
-  const getCardById = (cardId: number) => {
-    if (!drawnCards) return null;
-    const foundCard = drawnCards.find((dc) => dc.id === cardId);
-    return foundCard || null;
   };
 
   return (
@@ -180,14 +137,16 @@ export default function AIInterpretation({
           </div>
 
           <div className="space-y-10 md:space-y-12">
-            <AnimatePresence>
-              {interpretation.cardInterpretations.map((cardInterp, index) => {
-                const drawnCard = getCardById(cardInterp.cardId);
-                const imagePath = drawnCard?.imagePath || null;
-                const displayName = drawnCard?.name ?? cardInterp.cardName;
-                const displayOrientation = drawnCard?.orientation ?? cardInterp.orientation;
+            {interpretation.cardInterpretations.map((cardInterp, index) => {
+              const drawnCard = drawnCards?.find(
+                (card) => card.id === cardInterp.cardId,
+              );
+              const imagePath = drawnCard?.imagePath || null;
+              const displayName = drawnCard?.name ?? cardInterp.cardName;
+              const displayOrientation =
+                drawnCard?.orientation ?? cardInterp.orientation;
 
-                return (
+              return (
                   <motion.div
                     key={cardInterp.position}
                     variants={sectionVariants}
@@ -312,8 +271,7 @@ export default function AIInterpretation({
                     )}
                   </motion.div>
                 );
-              })}
-            </AnimatePresence>
+            })}
           </div>
         </motion.section>
 

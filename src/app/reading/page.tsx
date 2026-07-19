@@ -13,35 +13,18 @@ import type {
   DrawnCard,
   ReadingResponse,
   SpreadPosition,
-  CardInterpretation,
 } from '@/types/tarot';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import NoiseTexture from '@/components/Backgrounds';
-
-/**
- * Render the reading page UI for a stored tarot reading, showing the selected spread, question,
- * interactive card layouts, card details panel, controls to start a new reading, and an optional
- * AI-generated interpretation.
- *
- * The component loads a saved reading from storage on mount and redirects to the root if absent.
- * It validates spread and question data, manages selected card/position state, and provides a
- * handler to request an AI interpretation from the server. Loading and error states for the
- * AI request are reflected in the UI.
- *
- * @returns The React element tree for the Reading page.
- */
 export default function ReadingPage() {
   const router = useRouter();
   const [reading, setReading] = useState<ReadingResponse | null>(null);
-  const [selectedCard, setSelectedCard] = useState<DrawnCard | null>(null);
-  const [selectedPosition, setSelectedPosition] =
-    useState<SpreadPosition | null>(null);
-  const [aiInterpretation, setAiInterpretation] = useState<{
-    cardInterpretations: CardInterpretation[];
-    overallReading: string;
-    closingAdvice: string;
+  const [selection, setSelection] = useState<{
+    card: DrawnCard;
+    position: SpreadPosition;
   } | null>(null);
+  const [aiInterpretation, setAiInterpretation] =
+    useState<AIReadingResponse | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -55,20 +38,11 @@ export default function ReadingPage() {
     setReading(data);
   }, [router]);
 
-  // Cleanup AbortController on component unmount
-  useEffect(() => {
-    return () => {
-      // Abort any pending AI requests when component unmounts
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, []);
+  useEffect(() => () => abortControllerRef.current?.abort(), []);
 
   if (!reading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-mage-purple-950 relative">
-        <NoiseTexture />
         <p className="text-mage-gold-600">Loading your reading...</p>
       </div>
     );
@@ -93,13 +67,7 @@ export default function ReadingPage() {
   }
 
   const handleCardClick = (card: DrawnCard, position: SpreadPosition) => {
-    setSelectedCard(card);
-    setSelectedPosition(position);
-  };
-
-  const handleCloseDetails = () => {
-    setSelectedCard(null);
-    setSelectedPosition(null);
+    setSelection({ card, position });
   };
 
   const handleNewReading = () => {
@@ -108,8 +76,6 @@ export default function ReadingPage() {
   };
 
   const handleGetAIReading = async () => {
-    if (!reading) return;
-
     setIsLoadingAI(true);
     setAiError(null);
 
@@ -138,11 +104,7 @@ export default function ReadingPage() {
       }
 
       const data: AIReadingResponse = await response.json();
-      setAiInterpretation({
-        cardInterpretations: data.cardInterpretations,
-        overallReading: data.overallReading,
-        closingAdvice: data.closingAdvice,
-      });
+      setAiInterpretation(data);
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         setAiError('The reading took too long to complete. Please try again.');
@@ -161,7 +123,6 @@ export default function ReadingPage() {
 
   return (
     <div className="min-h-screen pt-20 px-4 sm:px-8 bg-mage-purple-950 text-mage-gold-700 relative">
-      <NoiseTexture />
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="font-abbess text-3xl sm:text-4xl font-bold mb-3 text-mage-gold-700">
@@ -241,10 +202,10 @@ export default function ReadingPage() {
       </div>
 
       <CardDetails
-        card={selectedCard}
-        orientation={selectedCard?.orientation || 'upright'}
-        positionInfo={selectedPosition}
-        onCloseAction={handleCloseDetails}
+        card={selection?.card ?? null}
+        orientation={selection?.card.orientation ?? 'upright'}
+        positionInfo={selection?.position ?? null}
+        onCloseAction={() => setSelection(null)}
       />
     </div>
   );

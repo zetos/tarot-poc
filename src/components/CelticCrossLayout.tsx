@@ -10,6 +10,15 @@ type CelticCrossLayoutProps = {
   onCardClick: (card: DrawnCard, position: SpreadPosition) => void;
 };
 
+const crossPlacements = [
+  { position: 5, className: 'col-start-3 row-start-1', grid: '3 / 4', row: '1 / 2' },
+  { position: 4, className: 'col-start-1 row-start-3', grid: '1 / 2', row: '3 / 4' },
+  { position: 1, className: 'col-start-3 row-start-3 z-10', grid: '3 / 4', row: '3 / 4', x: 0 },
+  { position: 2, className: 'col-start-3 row-start-3 z-20', grid: '3 / 4', row: '3 / 4', x: 100, cardClassName: '-rotate-45' },
+  { position: 6, className: 'col-start-5 row-start-3', grid: '5 / 6', row: '3 / 4' },
+  { position: 3, className: 'col-start-3 row-start-5', grid: '3 / 4', row: '5 / 6' },
+];
+
 export default function CelticCrossLayout({
   cards,
   spreadPositions,
@@ -69,122 +78,27 @@ export default function CelticCrossLayout({
               gridTemplateRows: "repeat(5, auto)",
             }}
           >
-            {[5].map((pos) => {
-              const card = getCardByPosition(pos);
-              const posInfo = getPositionInfo(pos);
+            {crossPlacements.map((placement) => {
+              const card = getCardByPosition(placement.position);
+              const posInfo = getPositionInfo(placement.position);
               if (!card || !posInfo) return null;
-              return (
-                <motion.div
-                  key={pos}
-                  className="col-start-3 row-start-1"
-                  style={{ gridColumn: "3 / 4", gridRow: "1 / 2" }}
-                  variants={cardVariants}
-                >
-                  <TarotCard
-                    card={card}
-                    positionName={posInfo.name}
-                    onClick={() => onCardClick(card, posInfo)}
-                  />
-                </motion.div>
-              );
-            })}
 
-            {[4].map((pos) => {
-              const card = getCardByPosition(pos);
-              const posInfo = getPositionInfo(pos);
-              if (!card || !posInfo) return null;
               return (
                 <motion.div
-                  key={pos}
-                  className="col-start-1 row-start-3"
-                  style={{ gridColumn: "1 / 2", gridRow: "3 / 4" }}
+                  key={placement.position}
+                  className={placement.className}
+                  style={{
+                    gridColumn: placement.grid,
+                    gridRow: placement.row,
+                    x: placement.x,
+                  }}
                   variants={cardVariants}
                 >
                   <TarotCard
                     card={card}
                     positionName={posInfo.name}
                     onClick={() => onCardClick(card, posInfo)}
-                  />
-                </motion.div>
-              );
-            })}
-
-            {[1].map((pos) => {
-              const card = getCardByPosition(pos);
-              const posInfo = getPositionInfo(pos);
-              if (!card || !posInfo) return null;
-              return (
-                <motion.div
-                  key={pos}
-                  className="col-start-3 row-start-3 z-10"
-                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: -0 }}
-                  variants={cardVariants}
-                >
-                  <TarotCard
-                    card={card}
-                    positionName={posInfo.name}
-                    onClick={() => onCardClick(card, posInfo)}
-                  />
-                </motion.div>
-              );
-            })}
-
-            {[2].map((pos) => {
-              const card = getCardByPosition(pos);
-              const posInfo = getPositionInfo(pos);
-              if (!card || !posInfo) return null;
-              return (
-                <motion.div
-                  key={pos}
-                  className="col-start-3 row-start-3 z-20"
-                  style={{ gridColumn: "3 / 4", gridRow: "3 / 4", x: 100 }}
-                  variants={cardVariants}
-                >
-                  <TarotCard
-                    card={card}
-                    positionName={posInfo.name}
-                    onClick={() => onCardClick(card, posInfo)}
-                    className="-rotate-45"
-                  />
-                </motion.div>
-              );
-            })}
-
-            {[6].map((pos) => {
-              const card = getCardByPosition(pos);
-              const posInfo = getPositionInfo(pos);
-              if (!card || !posInfo) return null;
-              return (
-                <motion.div
-                  key={pos}
-                  className="col-start-5 row-start-3"
-                  style={{ gridColumn: "5 / 6", gridRow: "3 / 4" }}
-                  variants={cardVariants}
-                >
-                  <TarotCard
-                    card={card}
-                    positionName={posInfo.name}
-                    onClick={() => onCardClick(card, posInfo)}
-                  />
-                </motion.div>
-              );
-            })}
-
-            {[3].map((pos) => {
-              const card = getCardByPosition(pos);
-              const posInfo = getPositionInfo(pos);
-              if (!card || !posInfo) return null;
-              return (
-                <motion.div
-                  key={pos}
-                  className="col-start-3 row-start-5"
-                  style={{ gridColumn: "3 / 4", gridRow: "5 / 6" }}
-                  variants={cardVariants}
-                >
-                  <TarotCard
-                    card={card}
-                    positionName={posInfo.name}
-                    onClick={() => onCardClick(card, posInfo)}
+                    className={placement.cardClassName}
                   />
                 </motion.div>
               );

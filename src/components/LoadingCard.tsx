@@ -13,23 +13,15 @@ const stages = [
 
 export default function LoadingCard() {
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [stageIndex, setStageIndex] = useState(0);
+  const stageIndex = Math.floor(elapsedTime / 5) % stages.length;
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const timeInterval = setInterval(() => {
+    const interval = setInterval(() => {
       setElapsedTime((prev) => prev + 1);
     }, 1000);
 
-    return () => clearInterval(timeInterval);
-  }, []);
-
-  useEffect(() => {
-    const stageInterval = setInterval(() => {
-      setStageIndex((prev) => (prev + 1) % stages.length);
-    }, 5000);
-
-    return () => clearInterval(stageInterval);
+    return () => clearInterval(interval);
   }, []);
 
   const formatTime = (seconds: number) => {
