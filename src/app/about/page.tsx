@@ -1,10 +1,15 @@
 import Image from 'next/image';
-  import NoiseTexture from '@/components/Backgrounds';
+
+const suits = [
+  ['Questing', 'Traditions', 'Fire', 'Wands'],
+  ['Primordialism', 'Nephandi', 'Water', 'Cups'],
+  ['Dynamism', 'Marauders', 'Air', 'Swords'],
+  ['Pattern', 'Technocracy', 'Earth', 'Pentacles'],
+];
 
 export default function About() {
   return (
     <div className="min-h-screen bg-mage-purple-950 text-mage-gold-700 relative">
-      <NoiseTexture />
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="font-abbess text-4xl sm:text-5xl font-bold mb-4 tracking-tight text-mage-gold-700">
@@ -141,30 +146,15 @@ export default function About() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border border-mage-gold-800/30">
-                    <td className="p-3 text-mage-gold-500">Questing</td>
-                    <td className="p-3 text-mage-gold-500">Traditions</td>
-                    <td className="p-3 text-mage-gold-500">Fire</td>
-                    <td className="p-3 text-mage-gold-500">Wands</td>
-                  </tr>
-                  <tr className="border border-mage-gold-800/30">
-                    <td className="p-3 text-mage-gold-500">Primordialism</td>
-                    <td className="p-3 text-mage-gold-500">Nephandi</td>
-                    <td className="p-3 text-mage-gold-500">Water</td>
-                    <td className="p-3 text-mage-gold-500">Cups</td>
-                  </tr>
-                  <tr className="border border-mage-gold-800/30">
-                    <td className="p-3 text-mage-gold-500">Dynamism</td>
-                    <td className="p-3 text-mage-gold-500">Marauders</td>
-                    <td className="p-3 text-mage-gold-500">Air</td>
-                    <td className="p-3 text-mage-gold-500">Swords</td>
-                  </tr>
-                  <tr className="border border-mage-gold-800/30">
-                    <td className="p-3 text-mage-gold-500">Pattern</td>
-                    <td className="p-3 text-mage-gold-500">Technocracy</td>
-                    <td className="p-3 text-mage-gold-500">Earth</td>
-                    <td className="p-3 text-mage-gold-500">Pentacles</td>
-                  </tr>
+                  {suits.map((suit) => (
+                    <tr key={suit[0]} className="border border-mage-gold-800/30">
+                      {suit.map((value) => (
+                        <td key={value} className="p-3 text-mage-gold-500">
+                          {value}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

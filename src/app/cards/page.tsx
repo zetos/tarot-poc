@@ -1,14 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import NoiseTexture from '@/components/Backgrounds';
-import {
-  motion,
-  AnimatePresence,
-  useReducedMotion,
-  useInView,
-} from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import {
   majorArcana,
@@ -85,29 +79,51 @@ const descriptions: Record<string, Description> = {
   },
 };
 
+const allSections = [
+  { title: 'Major Arcana', cards: majorArcana, key: 'Major Arcana' },
+  { title: 'Questing (Fire)', cards: questingCards, key: 'Questing' },
+  {
+    title: 'Primordialism (Water)',
+    cards: primordialismCards,
+    key: 'Primordialism',
+  },
+  { title: 'Dynamism (Air)', cards: dynamismCards, key: 'Dynamism' },
+  { title: 'Pattern (Earth)', cards: patternCards, key: 'Pattern' },
+];
+
+const filterOptions = [
+  { value: 'All Cards', label: 'All Cards' },
+  ...allSections.map((section) => ({
+    value: section.key,
+    label: section.title,
+  })),
+];
+
+const headerVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
+  },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1 },
+  hover: { scale: 1.05, y: -5 },
+  tap: { scale: 0.95 },
+};
+
 export default function Cards() {
   const [selectedCard, setSelectedCard] = useState<TarotCard | null>(null);
   const [filter, setFilter] = useState('All Cards');
-
-  const allSections = [
-    { title: 'Major Arcana', cards: majorArcana, key: 'Major Arcana' },
-    { title: 'Questing (Fire)', cards: questingCards, key: 'Questing' },
-    {
-      title: 'Primordialism (Water)',
-      cards: primordialismCards,
-      key: 'Primordialism',
-    },
-    { title: 'Dynamism (Air)', cards: dynamismCards, key: 'Dynamism' },
-    { title: 'Pattern (Earth)', cards: patternCards, key: 'Pattern' },
-  ];
-
-  const filterOptions = [
-    { value: 'All Cards', label: 'All Cards' },
-    ...allSections.map((section) => ({
-      value: section.key,
-      label: section.title,
-    })),
-  ];
 
   const sections =
     filter === 'All Cards'
@@ -116,133 +132,8 @@ export default function Cards() {
 
   const shouldReduceMotion = useReducedMotion();
 
-  const SectionItem: React.FC<{
-    section: (typeof sections)[0];
-    shouldReduceMotion: boolean | null;
-    sectionVariants: Variants;
-    cardVariants: Variants;
-    setSelectedCard: (card: TarotCard) => void;
-  }> = ({
-    section,
-    shouldReduceMotion,
-    sectionVariants,
-    cardVariants,
-    setSelectedCard,
-  }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
-    return (
-      <motion.section
-        ref={ref}
-        className="mb-12"
-        variants={sectionVariants}
-        initial={shouldReduceMotion ? false : 'hidden'}
-        animate={shouldReduceMotion ? false : isInView ? 'visible' : 'hidden'}
-        exit={shouldReduceMotion ? undefined : 'exit'}
-      >
-        <h2 className="font-visit text-2xl font-semibold mb-6 text-mage-gold-700 border-b border-mage-gold-800/30 pb-2">
-          {section.title}
-        </h2>
-        {descriptions[section.key] &&
-          (() => {
-            const desc = descriptions[section.key];
-            return (
-              <div className="mb-8 p-6 bg-mage-purple-800/30 rounded-lg border border-mage-gold-700/30 shadow-lg">
-                {desc.quote && (
-                  <blockquote className="border-l-4 border-mage-gold-700 italic text-mage-gold-600 mb-4 pl-4 text-lg">
-                    <p className="whitespace-pre-line">{desc.quote}</p>
-                    <cite className="block text-sm mt-2 font-medium">
-                      — {desc.citation}
-                    </cite>
-                  </blockquote>
-                )}
-                <p className="text-mage-gold-600 mb-4 leading-relaxed">
-                  {desc.description}
-                </p>
-                {desc.virtues && (
-                  <p className="text-mage-gold-600 mb-2">
-                    <strong className="text-mage-gold-700">Virtues:</strong>{' '}
-                    {desc.virtues.join(', ')}
-                  </p>
-                )}
-                {desc.vices && (
-                  <p className="text-mage-gold-600 mb-2">
-                    <strong className="text-mage-gold-700">Vices:</strong>{' '}
-                    {desc.vices.join(', ')}
-                  </p>
-                )}
-                {desc.element && (
-                  <p className="text-mage-gold-600 mb-2">
-                    <strong className="text-mage-gold-700">Element:</strong>{' '}
-                    {desc.element}
-                  </p>
-                )}
-                {desc.season && (
-                  <p className="text-mage-gold-600">
-                    <strong className="text-mage-gold-700">Season:</strong>{' '}
-                    {desc.season}
-                  </p>
-                )}
-              </div>
-            );
-          })()}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {section.cards.map((card: TarotCard) => (
-            <motion.div
-              key={card.id}
-              className="bg-mage-purple-800/80 rounded-lg border-2 border-mage-gold-700/40 overflow-hidden cursor-pointer"
-              variants={cardVariants}
-              whileHover={shouldReduceMotion ? undefined : 'hover'}
-              whileTap={shouldReduceMotion ? undefined : 'tap'}
-              transition={{
-                duration: 0.6,
-                ease: [0.25, 0.46, 0.45, 0.94],
-              }}
-              onClick={() => setSelectedCard(card)}
-            >
-              <Image
-                src={card.imagePath}
-                alt={card.name}
-                width={150}
-                height={250}
-                className="w-full h-full object-contain"
-                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
-              />
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-    );
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        staggerChildren: 0.05,
-        delayChildren: 0.1,
-      },
-    },
-    exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 },
-    hover: { scale: 1.05, y: -5 },
-    tap: { scale: 0.95 },
-  };
-
   return (
     <div className="relative min-h-screen bg-mage-purple-950 text-mage-gold-700">
-      <NoiseTexture />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <motion.div
           className="text-center mb-12"
@@ -270,16 +161,90 @@ export default function Cards() {
         </motion.div>
 
         <AnimatePresence mode="sync">
-          {sections.map((section) => (
-            <SectionItem
-              key={section.title}
-              section={section}
-              shouldReduceMotion={shouldReduceMotion}
-              sectionVariants={sectionVariants}
-              cardVariants={cardVariants}
-              setSelectedCard={setSelectedCard}
-            />
-          ))}
+          {sections.map((section) => {
+            const desc = descriptions[section.key];
+            return (
+              <motion.section
+                key={section.title}
+                className="mb-12"
+                variants={sectionVariants}
+                initial={shouldReduceMotion ? false : 'hidden'}
+                whileInView={shouldReduceMotion ? undefined : 'visible'}
+                viewport={{ once: true, margin: '-100px' }}
+                exit={shouldReduceMotion ? undefined : 'exit'}
+              >
+                <h2 className="font-visit text-2xl font-semibold mb-6 text-mage-gold-700 border-b border-mage-gold-800/30 pb-2">
+                  {section.title}
+                </h2>
+                {desc && (
+                  <div className="mb-8 p-6 bg-mage-purple-800/30 rounded-lg border border-mage-gold-700/30 shadow-lg">
+                    {desc.quote && (
+                      <blockquote className="border-l-4 border-mage-gold-700 italic text-mage-gold-600 mb-4 pl-4 text-lg">
+                        <p className="whitespace-pre-line">{desc.quote}</p>
+                        <cite className="block text-sm mt-2 font-medium">
+                          — {desc.citation}
+                        </cite>
+                      </blockquote>
+                    )}
+                    <p className="text-mage-gold-600 mb-4 leading-relaxed">
+                      {desc.description}
+                    </p>
+                    {desc.virtues && (
+                      <p className="text-mage-gold-600 mb-2">
+                        <strong className="text-mage-gold-700">
+                          Virtues:
+                        </strong>{' '}
+                        {desc.virtues.join(', ')}
+                      </p>
+                    )}
+                    {desc.vices && (
+                      <p className="text-mage-gold-600 mb-2">
+                        <strong className="text-mage-gold-700">Vices:</strong>{' '}
+                        {desc.vices.join(', ')}
+                      </p>
+                    )}
+                    {desc.element && (
+                      <p className="text-mage-gold-600 mb-2">
+                        <strong className="text-mage-gold-700">Element:</strong>{' '}
+                        {desc.element}
+                      </p>
+                    )}
+                    {desc.season && (
+                      <p className="text-mage-gold-600">
+                        <strong className="text-mage-gold-700">Season:</strong>{' '}
+                        {desc.season}
+                      </p>
+                    )}
+                  </div>
+                )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                  {section.cards.map((card: TarotCard) => (
+                    <motion.div
+                      key={card.id}
+                      className="bg-mage-purple-800/80 rounded-lg border-2 border-mage-gold-700/40 overflow-hidden cursor-pointer"
+                      variants={cardVariants}
+                      whileHover={shouldReduceMotion ? undefined : 'hover'}
+                      whileTap={shouldReduceMotion ? undefined : 'tap'}
+                      transition={{
+                        duration: 0.6,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                      }}
+                      onClick={() => setSelectedCard(card)}
+                    >
+                      <Image
+                        src={card.imagePath}
+                        alt={card.name}
+                        width={150}
+                        height={250}
+                        className="w-full h-full object-contain"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.section>
+            );
+          })}
         </AnimatePresence>
       </div>
 
