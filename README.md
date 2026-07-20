@@ -2,6 +2,12 @@
 
 A modern Next.js 15 web application for performing digital Tarot readings using the complete 78-card Mage: The Ascension deck. This proof-of-concept demonstrates interactive card spreads, dynamic orientations, and responsive design with TypeScript and Tailwind CSS.
 
+## Live Demo
+
+The application is deployed on Vercel at [tarot-poc-eta.vercel.app](https://tarot-poc-eta.vercel.app/).
+
+> **Deployment note:** The **Consult with Granny** button, which sends the question and drawn cards to an LLM for interpretation, is intentionally unavailable in the live version. No OpenAI API key is configured for the public deployment. The feature can still be used locally by configuring your own API key as described below.
+
 ---
 
 ## Features
@@ -28,16 +34,16 @@ A modern Next.js 15 web application for performing digital Tarot readings using 
 
 ## Tech Stack
 
-| Component          | Technology                              |
-| ------------------ | --------------------------------------- |
-| Framework          | [Next.js 15.5.4](https://nextjs.org/) (App Router) |
-| Runtime            | React 19.1.0                            |
-| Language           | TypeScript (strict mode)                |
-| Styling            | [Tailwind CSS 4](https://tailwindcss.com/) with PostCSS |
-| Animations         | [Framer Motion](https://www.framer.com/motion/) |
-| AI Framework       | [Mastra 0.24.8](https://mastra.ai) (optional) |
-| Build Tool         | Turbopack                               |
-| Package Manager    | pnpm                                    |
+| Component       | Technology                                              |
+| --------------- | ------------------------------------------------------- |
+| Framework       | [Next.js 15.5.4](https://nextjs.org/) (App Router)      |
+| Runtime         | React 19.1.0                                            |
+| Language        | TypeScript (strict mode)                                |
+| Styling         | [Tailwind CSS 4](https://tailwindcss.com/) with PostCSS |
+| Animations      | [Framer Motion](https://www.framer.com/motion/)         |
+| AI Framework    | [Mastra 0.24.8](https://mastra.ai) (optional)           |
+| Build Tool      | Turbopack                                               |
+| Package Manager | pnpm                                                    |
 
 ---
 
@@ -137,13 +143,13 @@ tarot-poc/
 
 ## Development Commands
 
-| Command | Description |
-| ------- | ----------- |
-| `pnpm run dev` | Start development server with Turbopack |
-| `pnpm run build` | Create production build |
-| `pnpm run start` | Run production server |
-| `pnpm run lint` | Run ESLint validation |
-| `npx tsc --noEmit` | TypeScript type checking |
+| Command            | Description                             |
+| ------------------ | --------------------------------------- |
+| `pnpm run dev`     | Start development server with Turbopack |
+| `pnpm run build`   | Create production build                 |
+| `pnpm run start`   | Run production server                   |
+| `pnpm run lint`    | Run ESLint validation                   |
+| `npx tsc --noEmit` | TypeScript type checking                |
 
 ---
 
