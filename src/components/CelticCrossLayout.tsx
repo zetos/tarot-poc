@@ -11,12 +11,21 @@ type CelticCrossLayoutProps = {
 };
 
 const crossPlacements = [
-  { position: 5, className: 'col-start-3 row-start-1', grid: '3 / 4', row: '1 / 2' },
-  { position: 4, className: 'col-start-1 row-start-3', grid: '1 / 2', row: '3 / 4' },
-  { position: 1, className: 'col-start-3 row-start-3 z-10', grid: '3 / 4', row: '3 / 4', x: 0 },
-  { position: 2, className: 'col-start-3 row-start-3 z-20', grid: '3 / 4', row: '3 / 4', x: 100, cardClassName: '-rotate-45' },
-  { position: 6, className: 'col-start-5 row-start-3', grid: '5 / 6', row: '3 / 4' },
-  { position: 3, className: 'col-start-3 row-start-5', grid: '3 / 4', row: '5 / 6' },
+  { position: 5, className: "col-start-2 row-start-1 lg:col-start-3" },
+  { position: 4, className: "col-start-1 row-start-2 lg:row-start-3" },
+  {
+    position: 1,
+    className: "col-start-2 row-start-2 z-10 lg:col-start-3 lg:row-start-3",
+  },
+  {
+    position: 2,
+    className:
+      "relative left-[clamp(44px,14vw,64px)] col-start-2 row-start-2 z-20 lg:left-[100px] lg:col-start-3 lg:row-start-3",
+    cardClassName: "-rotate-45",
+    cardWrapperClassName: "mx-auto w-3/4 lg:w-full",
+  },
+  { position: 6, className: "col-start-3 row-start-2 lg:col-start-5 lg:row-start-3" },
+  { position: 3, className: "col-start-2 row-start-3 lg:col-start-3 lg:row-start-5" },
 ];
 
 export default function CelticCrossLayout({
@@ -71,13 +80,7 @@ export default function CelticCrossLayout({
           initial="hidden"
           animate="visible"
         >
-          <div
-            className="grid grid-cols-5 grid-rows-5 gap-2 sm:gap-3"
-            style={{
-              gridTemplateColumns: "repeat(5, minmax(0, 220px))",
-              gridTemplateRows: "repeat(5, auto)",
-            }}
-          >
+          <div className="mx-auto grid w-full max-w-2xl grid-cols-3 grid-rows-3 gap-x-2 gap-y-5 sm:grid-cols-[repeat(3,minmax(0,180px))] sm:justify-center sm:gap-x-3 sm:gap-y-6 lg:mx-0 lg:max-w-none lg:grid-cols-[repeat(5,minmax(0,220px))] lg:grid-rows-[repeat(5,auto)] lg:justify-start lg:gap-3">
             {crossPlacements.map((placement) => {
               const card = getCardByPosition(placement.position);
               const posInfo = getPositionInfo(placement.position);
@@ -87,19 +90,16 @@ export default function CelticCrossLayout({
                 <motion.div
                   key={placement.position}
                   className={placement.className}
-                  style={{
-                    gridColumn: placement.grid,
-                    gridRow: placement.row,
-                    x: placement.x,
-                  }}
                   variants={cardVariants}
                 >
-                  <TarotCard
-                    card={card}
-                    positionName={posInfo.name}
-                    onClick={() => onCardClick(card, posInfo)}
-                    className={placement.cardClassName}
-                  />
+                  <div className={placement.cardWrapperClassName}>
+                    <TarotCard
+                      card={card}
+                      positionName={posInfo.name}
+                      onClick={() => onCardClick(card, posInfo)}
+                      className={placement.cardClassName}
+                    />
+                  </div>
                 </motion.div>
               );
             })}
@@ -107,7 +107,7 @@ export default function CelticCrossLayout({
         </motion.div>
 
         <motion.div
-          className="flex flex-col-reverse gap-2 sm:gap-3 w-full max-w-[220px]"
+          className="grid w-full max-w-lg grid-cols-2 gap-x-4 gap-y-6 sm:max-w-3xl sm:grid-cols-4 sm:gap-3 lg:flex lg:max-w-[220px] lg:flex-col-reverse"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
